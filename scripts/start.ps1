@@ -22,5 +22,12 @@ docker compose build prepare
 if ($LASTEXITCODE -ne 0) { throw 'Benchmark image build failed.' }
 docker compose up -d --no-build --remove-orphans
 if ($LASTEXITCODE -ne 0) { throw 'Docker startup failed; inspect the output above.' }
-Start-Process 'http://localhost:9088/data/perspective/client/performance-lab'
+$Url = 'http://localhost:9088/data/perspective/client/performance-lab'
+Write-Host 'Waiting for the gateway to start...'
+$Ready = $false
+for ($Attempt = 0; $Attempt -lt 60; $Attempt++) {
+  try { Invoke-WebRequest -UseBasicParsing -Uri $Url -TimeoutSec 2 | Out-Null; $Ready = $true; break } catch { Start-Sleep -Seconds 2 }
+}
+if (-not $Ready) { throw 'Gateway is not ready. Inspect docker compose logs gateway, then retry.' }
+Start-Process $Url
 Write-Host 'Stop all services with: docker compose stop'

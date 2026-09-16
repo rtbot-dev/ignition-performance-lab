@@ -24,7 +24,7 @@ docker compose up -d --no-build --remove-orphans
 if command -v curl >/dev/null; then
   attempts=0
   until curl -fsS http://localhost:9088/data/perspective/client/performance-lab >/dev/null 2>&1; do
-    attempts=$((attempts + 1)); [ "$attempts" -lt 60 ] || break
+    attempts=$((attempts + 1)); [ "$attempts" -lt 60 ] || { echo "Gateway is not ready. Inspect: docker compose logs gateway"; exit 1; }
     sleep 2
   done
 fi

@@ -1,11 +1,11 @@
-![Ignition Performance Lab — How far can your gateway go?](assets/readme-banner.svg)
+# Learn how to test the limits of Ignition analytics
 
 [![Follow Katenaria on LinkedIn](assets/follow-katenaria.svg)](https://www.linkedin.com/company/katenaria/)
 [![Explore Coprocessor](assets/explore-coprocessor.svg)](https://coprocessor.app)
 
-**How much analytics can your Ignition gateway handle before it falls behind?**
+**Recognize when an analytics workload stops keeping up—and learn how to measure it.**
 Run the experiment on your own machine. Increase the inputs, watch the queue and
-resource use, and discover the boundary for your workload. Real data, inspectable
+resource use, and learn to distinguish startup spikes from sustained overload. Real data, inspectable
 code, and results you can reproduce.
 
 Built by **[Katenaria](https://katenaria.com)** for Ignition system integrators.
@@ -13,15 +13,16 @@ Follow our experiments, share your findings, and help us test what comes next.
 
 ## Try the lab
 
-With Docker Desktop running, [download this repository](https://github.com/rtbot-dev/ignition-performance-lab/archive/refs/heads/main.zip), extract it, and launch:
+With Docker running, download the launcher for your platform:
 
-```sh
-./lab.sh
-```
+[**Run experiment · macOS**](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-mac.command) · [**Windows**](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-windows.cmd) · [**Linux**](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-linux.sh)
 
-**macOS:** double-click `Start Lab.command`. **Windows PowerShell:** `./lab.ps1`.
-Accept the Ignition license when prompted. The launcher opens a local Ignition UI
-with input controls and live queue, CPU and heap charts. No Designer or PLC needed.
+Open the downloaded launcher; on Linux, run `sh Run-experiment-linux.sh`.
+It downloads a verified package, starts an isolated Ignition container, and opens
+the lab. Accept Ignition's license when prompted, then click **Run test** in the UI.
+First-run OS security prompts may appear. Docker Compose is required.
+
+[Launcher details and source](docs/launchers.md) · [Run from source](benchmarks/jython-vibration/#run)
 
 ## Pick an experiment
 

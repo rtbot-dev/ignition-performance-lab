@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Downloadable macOS, Linux and Windows launchers with pinned archive checksums.
+- Shared startup waits for gateway readiness before opening the browser.
+- README emphasizes learning the measurement method.
+
 ## 0.1.0
 
 - First benchmark: real IMS vibration recordings processed by Jython tag events.

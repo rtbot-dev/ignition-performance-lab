@@ -1,0 +1,29 @@
+$ErrorActionPreference = 'Stop'
+$Version = '@VERSION@'
+$Expected = '@SHA256@'
+$Url = "https://github.com/rtbot-dev/ignition-performance-lab/releases/download/$Version/ignition-performance-lab.zip"
+if (-not (Get-Command docker -ErrorAction SilentlyContinue)) { throw 'Install Docker Desktop and start it first.' }
+docker info *> $null
+if ($LASTEXITCODE -ne 0) { throw 'Start Docker Desktop and try again.' }
+docker compose version *> $null
+if ($LASTEXITCODE -ne 0) { throw 'Docker Compose v2 is required.' }
+$Base = Join-Path $env:LOCALAPPDATA 'Katenaria/ignition-performance-lab'
+$Dest = Join-Path $Base $Version
+$Marker = Join-Path $Dest ".installed-$Expected"
+New-Item -ItemType Directory -Force $Base | Out-Null
+if (-not (Test-Path $Marker)) {
+  if (Test-Path $Dest) { throw "Incomplete installation at $Dest. Move it aside before retrying." }
+  $Stage = Join-Path $Base ([Guid]::NewGuid().ToString('N'))
+  New-Item -ItemType Directory $Stage | Out-Null
+  try {
+    Write-Host "Downloading Ignition Performance Lab $Version..."
+    $Zip = Join-Path $Stage 'lab.zip'
+    Invoke-WebRequest -UseBasicParsing -Uri $Url -OutFile $Zip
+    if ((Get-FileHash -Algorithm SHA256 $Zip).Hash.ToLower() -ne $Expected) { throw 'Checksum failed. Nothing will run.' }
+    Expand-Archive -Path $Zip -DestinationPath $Stage
+    Move-Item (Join-Path $Stage 'ignition-performance-lab') $Dest
+    New-Item -ItemType File $Marker | Out-Null
+  } finally { Remove-Item -Recurse -Force $Stage }
+}
+Write-Host "Local files and results: $Dest"
+& (Join-Path $Dest 'scripts/start.ps1') -Benchmark 'jython-vibration'
