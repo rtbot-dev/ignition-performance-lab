@@ -30,3 +30,8 @@ Tag releases and cite the exact commit plus image digest in publications. Keep r
 results, including failed runs, in a release evidence attachment rather than
 committing mutable local results. Use `python3 scripts/package.py` for a clean
 source ZIP. Evidence archives must be separately reviewed for private data.
+
+Put operating instructions and experiment-specific documentation inside the
+benchmark directory, using `docs/` when needed. Keep the root README focused on
+discovery, running the lab and joining the discussion. Shared tools live in
+`scripts/`; local results, credentials and runtime state remain untracked.

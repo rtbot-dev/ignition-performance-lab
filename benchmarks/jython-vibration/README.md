@@ -3,6 +3,8 @@
 A reproducible Jython vibration workload and a method for testing sustained capacity.
 Built by Katenaria, the company behind Coprocessor. **No Coprocessor module required.**
 
+[Measurement method](docs/methodology.md) · [Share a reproduction](docs/reproduction.md) · [Test protocol](PROTOCOL.md)
+
 ## Run
 
 From the repository root, run `./lab.sh jython-vibration` (macOS/Linux) or

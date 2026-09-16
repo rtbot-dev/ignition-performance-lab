@@ -1,101 +1,42 @@
-# Ignition Performance Lab
+![Ignition Performance Lab — How far can your gateway go?](assets/readme-banner.svg)
 
-**Find the sustainable limit of your own analytics workload.**
+[![Follow Katenaria on LinkedIn](assets/follow-katenaria.svg)](https://www.linkedin.com/company/katenaria/)
+[![Explore Coprocessor](assets/explore-coprocessor.svg)](https://coprocessor.app)
 
-Runnable experiments from [Katenaria](https://katenaria.com), built around the
-method: hold a representative load, observe waiting work over time, then increase
-inputs until processing cannot keep up. Capacity depends on the computation,
-resource allocation, runtime and machine. There is no universal tag-count limit.
+**How much analytics can your Ignition gateway handle before it falls behind?**
+Run the experiment on your own machine. Increase the inputs, watch the queue and
+resource use, and discover the boundary for your workload. Real data, inspectable
+code, and results you can reproduce.
 
-## Start locally
+Built by **[Katenaria](https://katenaria.com)** for Ignition system integrators.
+Follow our experiments, share your findings, and help us test what comes next.
 
-Install and start Docker Desktop, download or clone this repository, and run:
+## Try the lab
+
+With Docker Desktop running, [download this repository](https://github.com/rtbot-dev/ignition-performance-lab/archive/refs/heads/main.zip), extract it, and launch:
 
 ```sh
 ./lab.sh
 ```
 
-Windows PowerShell: `./lab.ps1`. On macOS, double-click **Start Lab.command**.
-The first launch asks you to accept Ignition's license. It downloads the official
-Ignition image and opens a local Perspective interface. The gateway starts idle.
-Choose input count, cadence and duration, then run. No Designer or PLC is required.
+**macOS:** double-click `Start Lab.command`. **Windows PowerShell:** `./lab.ps1`.
+Accept the Ignition license when prompted. The launcher opens a local Ignition UI
+with input controls and live queue, CPU and heap charts. No Designer or PLC needed.
 
-**Open:** http://localhost:9088/data/perspective/client/performance-lab
+## Pick an experiment
 
-Watch the queue, CPU and heap in the lab. Independently inspect the gateway's CPU
-and memory in Docker Desktop's **Stats** tab. All computation and recorded results
-stay on your machine. Source code, configuration and data provenance are included.
+| Experiment | What you will discover |
+|---|---|
+| [**Jython vibration analytics →**](benchmarks/jython-vibration/) | Replay real bearing recordings and find when computation stops keeping up. |
 
-## Benchmarks
+Setup, methodology, dataset details and tested platforms live inside each experiment.
 
-| Experiment | Question | Status |
-|---|---|---|
-| [Jython vibration analytics](benchmarks/jython-vibration/) | When do per-tag vibration calculations build up a sustained backlog? | Validated locally on Apple Silicon / Docker Desktop |
+## What happens on your machine?
 
-The first experiment replays real IMS bearing recordings: 20,480 accelerometer
-samples per burst, about one second of vibration. It computes 14 statistical
-indicators with 22 output updates and checks every result against an independent
-reference. It tests gateway computation, not acquisition from a physical PLC.
+[**Share a reproduction**](https://github.com/rtbot-dev/ignition-performance-lab/issues/new?template=reproduction.md) · [**Suggest the next experiment**](https://github.com/rtbot-dev/ignition-performance-lab/issues/new) · [**Add a benchmark**](CONTRIBUTING.md)
 
-## What to observe
+**Want more analytics power inside Ignition?** We also build **Coprocessor**, a
+C++ computation engine for Ignition. [Explore what it can do](https://coprocessor.app)
+or [talk to us about your workload](mailto:services@katenaria.com).
 
-1. Start at low load and let the runtime warm up.
-2. Keep cadence and resources fixed; increase input tags between runs.
-3. Hold each load for at least 60 seconds. Ignore startup transients and examine
-   whether waiting work settles or continues to grow. Repeat near the boundary.
-4. Treat missed events as overload. Treat incorrect results or a late publisher
-   as an invalid test, not proof of processing capacity.
-
-See [measurement definitions](docs/methodology.md) and the benchmark's
-[operating instructions](benchmarks/jython-vibration/README.md).
-
-## Repository layout
-
-```text
-benchmarks/
-  jython-vibration/
-    benchmark.json      Experiment identity and tested environment
-    compose.yaml        Pinned runtime and explicit resource limits
-    Dockerfile          Project seed only; no Ignition binaries
-    project/            Inspectable Ignition scripts and Perspective views
-    corpus.json         Input recordings
-    provenance.json     Record identities and source checksums
-    plans/              Historical experiment recipes
-    analyze.py          Queue-trend analysis of raw results
-    test_benchmark.py   Numerical and methodology tests
-scripts/                Shared launch, validation and packaging tools
-docs/                   Method, contribution and reproduction guidance
-.github/                Automated tests and reproduction issue template
-lab.sh / lab.ps1         Single entry point; optional benchmark name
-```
-
-Each benchmark owns its workload and runtime configuration. Shared scripts handle
-launching and packaging. New benchmarks get new folders; existing published tests
-can remain reproducible. Run one lab at a time unless their host ports differ.
-
-Local `.env`, gateway state and `results/` are ignored by Git. To stop this lab:
-
-```sh
-cd benchmarks/jython-vibration
-docker compose stop
-```
-
-## Reproduce and contribute
-
-Use [the reproduction checklist](docs/reproduction.md) when sharing results.
-We welcome failures, corrections and independent measurements. Do not post secrets
-or production plant data. [Adding an experiment](CONTRIBUTING.md) describes the
-small contract each benchmark must meet.
-
-## Disclosure and licensing
-
-Katenaria also develops Coprocessor. This first benchmark tests **Jython alone**;
-Coprocessor is not installed. We publish the method and code so results can be
-checked independently.
-
-Benchmark code is MIT licensed. Ignition, container dependencies and the IMS data
-retain their own terms; see [NOTICE](benchmarks/jython-vibration/NOTICE.md).
-Ignition is downloaded from its official image, never redistributed in our seed
-image. Its trial and license requirements still apply. This project is not
-endorsed by Inductive Automation. Windows and AMD64 execution need independent
-verification; providing a launcher is not a claim they have been tested.
+<sub>This first benchmark runs Jython alone, without Coprocessor. Limits depend on workload and resources. [MIT license](LICENSE) · [Third-party notices](benchmarks/jython-vibration/NOTICE.md)</sub>
