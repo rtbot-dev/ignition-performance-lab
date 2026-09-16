@@ -3,7 +3,6 @@
 [![Checks](https://github.com/rtbot-dev/ignition-performance-lab/actions/workflows/validate.yml/badge.svg)](https://github.com/rtbot-dev/ignition-performance-lab/actions/workflows/validate.yml)
 [![Release](https://img.shields.io/github/v/release/rtbot-dev/ignition-performance-lab?color=087f8c)](https://github.com/rtbot-dev/ignition-performance-lab/releases/latest)
 [![License: MIT](https://img.shields.io/github/license/rtbot-dev/ignition-performance-lab?color=087f8c)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/rtbot-dev/ignition-performance-lab?style=social)](https://github.com/rtbot-dev/ignition-performance-lab/stargazers)
 
 **Recognize when an analytics workload stops keeping up—and learn how to measure it.**
 Run the experiment on your own machine. Increase the inputs, watch the queue and
