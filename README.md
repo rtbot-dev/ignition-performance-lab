@@ -17,18 +17,29 @@ Follow our experiments, share your findings, and help us test what comes next.
 
 ## Try the lab
 
-With Docker running, download the launcher for your platform:
+With Docker running, paste one command into your terminal.
 
-[![Run experiment on macOS](assets/run-macos.svg)](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-mac.command)
-[![Run experiment on Windows](assets/run-windows.svg)](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-windows.cmd)
-[![Run experiment on Linux](assets/run-linux.svg)](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-linux.sh)
+**macOS / Linux**
 
-Open the downloaded launcher; on Linux, run `sh Run-experiment-linux.sh`.
-It downloads a verified package, starts an isolated Ignition container, and opens
-the lab. Accept Ignition's license when prompted, then click **Run test** in the UI.
-First-run OS security prompts may appear. Docker Compose is required.
+```sh
+lab=$(mktemp) && curl -fsSL https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-linux.sh -o "$lab" && bash "$lab"
+```
 
-[Launcher details and source](docs/launchers.md) · [Run from source](benchmarks/jython-vibration/#run)
+<details>
+<summary><strong>Windows PowerShell</strong></summary>
+
+```powershell
+& { $lab = Join-Path $env:TEMP (([guid]::NewGuid().ToString()) + '.ps1'); Invoke-WebRequest -UseBasicParsing https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-windows.ps1 -OutFile $lab -ErrorAction Stop; powershell -NoProfile -ExecutionPolicy Bypass -File $lab }
+```
+
+</details>
+
+The command downloads and runs our launcher. It verifies the package, starts an
+isolated Ignition container, and opens the lab. Accept Ignition's license when
+prompted, then click **Run test** in the UI. Docker Compose is required; the first
+image download can take several minutes. No cloning or manual extraction.
+
+[Launcher source and details](docs/launchers.md) · [Run from source](benchmarks/jython-vibration/#run)
 
 ## Pick an experiment
 

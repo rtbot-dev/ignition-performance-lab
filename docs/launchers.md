@@ -1,4 +1,9 @@
-# Download and run the experiment
+# Run the experiment from your terminal
+
+The recommended entry point is the copy-and-paste terminal command in the root
+README. It saves a versioned launcher to a unique temporary file and runs it;
+standard input remains available for the license question (no curl-to-shell pipe).
+The macOS/Linux command uses the same portable shell launcher on both platforms.
 
 The launchers download the versioned source bundle from this GitHub repository's
 Releases, verify its SHA-256 against a value embedded in the launcher, and then
