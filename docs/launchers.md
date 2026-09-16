@@ -44,5 +44,5 @@ stubs. The Ignition project has been exercised on Apple Silicon with Docker
 Desktop. Native Windows and Linux end-to-end execution remain unverified.
 These are download-and-open launchers, not browser links that execute silently.
 
-Build the source ZIP and launchers with `python3 scripts/build_release.py v0.1.1`.
+Build the source ZIP and launchers with `python3 scripts/build_release.py v0.1.2`.
 The source archive excludes the generated launchers, avoiding a checksum cycle.

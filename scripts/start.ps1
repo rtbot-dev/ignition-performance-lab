@@ -8,6 +8,10 @@ Set-Location $BenchPath
 if (-not (Get-Command docker -ErrorAction SilentlyContinue)) { throw 'Install and start Docker Desktop, then run this launcher again.' }
 docker info *> $null
 if ($LASTEXITCODE -ne 0) { throw 'Start Docker Desktop, then run this launcher again.' }
+$Owners = @(docker ps --filter publish=9088 --format '{{.Names}} {{.Label "com.docker.compose.project"}}')
+if ($LASTEXITCODE -ne 0) { throw 'Could not inspect Docker port allocations.' }
+$Conflicts = @($Owners | Where-Object { $_ -and (($_ -split ' ')[-1] -ne 'katenaria-lab-jython-vibration') })
+if ($Conflicts.Count -gt 0) { throw "Port 9088 is already used by: $($Conflicts -join ', '). Stop that container in Docker Desktop if no longer needed, then retry. Nothing has been stopped automatically." }
 if (-not (Test-Path .env)) {
   Write-Host 'This starts a local Ignition trial and a bounded CPU load test.'
   Write-Host 'License: https://inductiveautomation.com/ignition/license'

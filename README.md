@@ -22,14 +22,14 @@ With Docker running, paste one command into your terminal.
 **macOS / Linux**
 
 ```sh
-curl -fL https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-linux.sh -o ignition-lab.sh && bash ignition-lab.sh
+curl -fL https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.2/Run-experiment-linux.sh -o ignition-lab.sh && bash ignition-lab.sh
 ```
 
 <details>
 <summary><strong>Windows PowerShell</strong></summary>
 
 ```powershell
-& { Invoke-WebRequest -UseBasicParsing https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-windows.ps1 -OutFile ignition-lab.ps1 -ErrorAction Stop; powershell -NoProfile -ExecutionPolicy Bypass -File ./ignition-lab.ps1 }
+& { Invoke-WebRequest -UseBasicParsing https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.2/Run-experiment-windows.ps1 -OutFile ignition-lab.ps1 -ErrorAction Stop; powershell -NoProfile -ExecutionPolicy Bypass -File ./ignition-lab.ps1 }
 ```
 
 </details>

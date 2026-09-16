@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Detect another Docker container on port 9088 before building or starting the lab.
+- Explain how to resolve the conflict without stopping unrelated services.
+
 ## 0.1.1
 
 - Downloadable macOS, Linux and Windows launchers with pinned archive checksums.

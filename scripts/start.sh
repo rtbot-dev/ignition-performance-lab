@@ -7,6 +7,15 @@ case "$benchmark" in *[!a-z0-9-]*|"") echo "Invalid benchmark name"; exit 1;; es
 cd "$repo/benchmarks/$benchmark"
 command -v docker >/dev/null || { echo 'Install and start Docker Desktop, then run this launcher again.'; exit 1; }
 docker info >/dev/null 2>&1 || { echo 'Start Docker Desktop, then run this launcher again.'; exit 1; }
+# Do not replace another lab or service that owns our published port.
+port_owners=$(docker ps --filter publish=9088 --format '{{.Names}} {{.Label "com.docker.compose.project"}}')
+conflicts=$(printf '%s\n' "$port_owners" | awk 'NF && $2 != "katenaria-lab-jython-vibration" {print $1}')
+if [ -n "$conflicts" ]; then
+  echo "Port 9088 is already used by: $conflicts"
+  echo 'Stop that container in Docker Desktop if it is no longer needed, then rerun this launcher.'
+  echo 'No existing container has been stopped or changed.'
+  exit 1
+fi
 if [ ! -f .env ]; then
   echo 'This starts a local Ignition trial and a bounded CPU load test.'
   echo 'License: https://inductiveautomation.com/ignition/license'
