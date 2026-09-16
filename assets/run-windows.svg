@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="230" height="62" viewBox="0 0 230 62" role="img" aria-label="Run experiment on Windows">
+<rect x="0.5" y="0.5" width="229" height="61" rx="9" fill="#103641" stroke="#23525f"/>
+<circle cx="30" cy="31" r="17" fill="#75ddca"/><path d="M26 23L38 31L26 39Z" fill="#103641"/>
+<text x="59" y="26" fill="#b8d8de" font-family="Arial,sans-serif" font-size="12">RUN EXPERIMENT</text>
+<text x="59" y="47" fill="#ffffff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Windows</text>
+<path d="M205 21V36M199 30L205 36L211 30M198 42H212" stroke="#75ddca" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>

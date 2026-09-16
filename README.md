@@ -1,7 +1,9 @@
 # Learn how to test the limits of Ignition analytics
 
-[![Follow Katenaria on LinkedIn](assets/follow-katenaria.svg)](https://www.linkedin.com/company/katenaria/)
-[![Explore Coprocessor](assets/explore-coprocessor.svg)](https://coprocessor.app)
+[![Checks](https://github.com/rtbot-dev/ignition-performance-lab/actions/workflows/validate.yml/badge.svg)](https://github.com/rtbot-dev/ignition-performance-lab/actions/workflows/validate.yml)
+[![Release](https://img.shields.io/github/v/release/rtbot-dev/ignition-performance-lab?color=087f8c)](https://github.com/rtbot-dev/ignition-performance-lab/releases/latest)
+[![License: MIT](https://img.shields.io/github/license/rtbot-dev/ignition-performance-lab?color=087f8c)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/rtbot-dev/ignition-performance-lab?style=social)](https://github.com/rtbot-dev/ignition-performance-lab/stargazers)
 
 **Recognize when an analytics workload stops keeping up—and learn how to measure it.**
 Run the experiment on your own machine. Increase the inputs, watch the queue and
@@ -11,11 +13,16 @@ code, and results you can reproduce.
 Built by **[Katenaria](https://katenaria.com)** for Ignition system integrators.
 Follow our experiments, share your findings, and help us test what comes next.
 
+[![Follow Katenaria on LinkedIn](assets/follow-katenaria.svg)](https://www.linkedin.com/company/katenaria/)
+[![Explore Coprocessor](assets/explore-coprocessor.svg)](https://coprocessor.app)
+
 ## Try the lab
 
 With Docker running, download the launcher for your platform:
 
-[**Run experiment · macOS**](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-mac.command) · [**Windows**](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-windows.cmd) · [**Linux**](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-linux.sh)
+[![Run experiment on macOS](assets/run-macos.svg)](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-mac.command)
+[![Run experiment on Windows](assets/run-windows.svg)](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-windows.cmd)
+[![Run experiment on Linux](assets/run-linux.svg)](https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-linux.sh)
 
 Open the downloaded launcher; on Linux, run `sh Run-experiment-linux.sh`.
 It downloads a verified package, starts an isolated Ignition container, and opens
