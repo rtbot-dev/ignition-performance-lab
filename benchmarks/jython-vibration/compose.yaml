@@ -19,7 +19,7 @@ services:
     cpus: ${BENCH_CPUS:-3}
     mem_limit: 4g
     ports:
-      - "127.0.0.1:9088:8088"
+      - "127.0.0.1:${LAB_PORT:-9088}:8088"
     environment:
       ACCEPT_IGNITION_EULA: ${ACCEPT_IGNITION_EULA:?Accept the Ignition EULA before starting}
       GATEWAY_ADMIN_USERNAME: benchmark

@@ -2,7 +2,7 @@
 from pathlib import Path
 import hashlib,subprocess,sys,re
 root=Path(__file__).resolve().parents[1]
-version=sys.argv[1] if len(sys.argv)>1 else 'v0.1.2'
+version=sys.argv[1] if len(sys.argv)>1 else 'v0.1.3'
 assert re.fullmatch(r'v\d+\.\d+\.\d+',version)
 subprocess.run([sys.executable,str(root/'scripts/package.py')],check=True)
 out=root/'dist';digest=hashlib.sha256((out/'ignition-performance-lab.zip').read_bytes()).hexdigest()

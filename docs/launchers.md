@@ -23,9 +23,14 @@ They do not require Git, Python or manual ZIP extraction.
   optional: the local lab URL is also printed.
 
 All platforms ask for Ignition license acceptance on first launch. Docker must be
-running. An occupied port 9088 causes Compose startup to fail rather than replacing
-another service. Stop that service or change the source configuration to run labs
-side by side. Downloads and image builds can take several minutes.
+running. If the selected port is occupied by another Docker container, the launcher offers
+three choices: stop the named container, use another port, or cancel. Stopping
+requires an explicit selection and interrupts that container's service. For an
+identified local process outside Docker, choose another port or stop it yourself.
+The selected port is remembered in `runtime/port` and used for browser startup.
+Set `LAB_PORT` to override it. Shell detection of non-Docker listeners uses `lsof`
+when available; Docker may still report a conflict if another process binds later.
+Downloads and image builds can take several minutes.
 
 Install locations, separated by release:
 
@@ -44,5 +49,14 @@ stubs. The Ignition project has been exercised on Apple Silicon with Docker
 Desktop. Native Windows and Linux end-to-end execution remain unverified.
 These are download-and-open launchers, not browser links that execute silently.
 
-Build the source ZIP and launchers with `python3 scripts/build_release.py v0.1.2`.
+Build the source ZIP and launchers with `python3 scripts/build_release.py v0.1.3`.
 The source archive excludes the generated launchers, avoiding a checksum cycle.
+
+## Connect with Ignition Designer
+
+After startup, the terminal prints the selected gateway URL, username `benchmark`,
+the generated password and project `performance-lab`. Add that gateway in Designer
+Launcher and sign in. The password is stored in the local benchmark `.env`; do not
+share that file or unredacted terminal output. An existing gateway volume keeps its
+original credentials, even if a different release generates a new `.env`. Reuse
+the original credentials in that case; the launcher does not reset passwords.

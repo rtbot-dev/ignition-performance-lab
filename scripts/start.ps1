@@ -8,10 +8,7 @@ Set-Location $BenchPath
 if (-not (Get-Command docker -ErrorAction SilentlyContinue)) { throw 'Install and start Docker Desktop, then run this launcher again.' }
 docker info *> $null
 if ($LASTEXITCODE -ne 0) { throw 'Start Docker Desktop, then run this launcher again.' }
-$Owners = @(docker ps --filter publish=9088 --format '{{.Names}} {{.Label "com.docker.compose.project"}}')
-if ($LASTEXITCODE -ne 0) { throw 'Could not inspect Docker port allocations.' }
-$Conflicts = @($Owners | Where-Object { $_ -and (($_ -split ' ')[-1] -ne 'katenaria-lab-jython-vibration') })
-if ($Conflicts.Count -gt 0) { throw "Port 9088 is already used by: $($Conflicts -join ', '). Stop that container in Docker Desktop if no longer needed, then retry. Nothing has been stopped automatically." }
+. (Join-Path $PSScriptRoot "port.ps1")
 if (-not (Test-Path .env)) {
   Write-Host 'This starts a local Ignition trial and a bounded CPU load test.'
   Write-Host 'License: https://inductiveautomation.com/ignition/license'
@@ -26,7 +23,6 @@ docker compose build prepare
 if ($LASTEXITCODE -ne 0) { throw 'Benchmark image build failed.' }
 docker compose up -d --no-build --remove-orphans
 if ($LASTEXITCODE -ne 0) { throw 'Docker startup failed; inspect the output above.' }
-$Url = 'http://localhost:9088/data/perspective/client/performance-lab'
 Write-Host 'Waiting for the gateway to start...'
 $Ready = $false
 for ($Attempt = 0; $Attempt -lt 60; $Attempt++) {
@@ -35,3 +31,16 @@ for ($Attempt = 0; $Attempt -lt 60; $Attempt++) {
 if (-not $Ready) { throw 'Gateway is not ready. Inspect docker compose logs gateway, then retry.' }
 Start-Process $Url
 Write-Host 'Stop all services with: docker compose stop'
+$ConfiguredPassword = $env:BENCH_PASSWORD
+if (-not $ConfiguredPassword) {
+  $PasswordLine = Get-Content .env | Where-Object { $_ -like 'BENCH_PASSWORD=*' } | Select-Object -Last 1
+  $ConfiguredPassword = $PasswordLine.Substring('BENCH_PASSWORD='.Length)
+}
+Write-Host "`nIgnition Designer connection"
+Write-Host "Gateway: http://localhost:$Port"
+Write-Host 'Username: benchmark'
+Write-Host "Password: $ConfiguredPassword"
+Write-Host 'Project: performance-lab'
+Write-Host 'These are the initial-setup credentials stored in this lab configuration.'
+Write-Host 'An existing gateway volume retains its original password; this launcher does not reset it.'
+Write-Host 'Keep this terminal output private.'

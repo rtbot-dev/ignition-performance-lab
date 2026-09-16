@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.3
+
+- Print Designer connection details and initial-setup credentials after startup.
+
+- Prompt to stop a conflicting Docker container, select another port, or cancel.
+- Remember the chosen port and use it for Compose, readiness and browser opening.
+- Test alternate-port, explicit-stop, cancellation and reuse paths without touching live services.
+
 ## 0.1.2
 
 - Detect another Docker container on port 9088 before building or starting the lab.

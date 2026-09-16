@@ -12,6 +12,7 @@ jobs:
           python-version: '3.12'
       - run: python scripts/validate.py
       - run: python scripts/test_launchers.py
+      - run: python scripts/test_ports.py
       - run: sh -n lab.sh scripts/start.sh 'Start Lab.command'
       - name: Validate Compose without starting a gateway
         env:
