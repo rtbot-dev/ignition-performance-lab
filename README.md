@@ -22,19 +22,20 @@ With Docker running, paste one command into your terminal.
 **macOS / Linux**
 
 ```sh
-lab=$(mktemp) && curl -fsSL https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-linux.sh -o "$lab" && bash "$lab"
+curl -fL https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-linux.sh -o ignition-lab.sh && bash ignition-lab.sh
 ```
 
 <details>
 <summary><strong>Windows PowerShell</strong></summary>
 
 ```powershell
-& { $lab = Join-Path $env:TEMP (([guid]::NewGuid().ToString()) + '.ps1'); Invoke-WebRequest -UseBasicParsing https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-windows.ps1 -OutFile $lab -ErrorAction Stop; powershell -NoProfile -ExecutionPolicy Bypass -File $lab }
+& { Invoke-WebRequest -UseBasicParsing https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.1/Run-experiment-windows.ps1 -OutFile ignition-lab.ps1 -ErrorAction Stop; powershell -NoProfile -ExecutionPolicy Bypass -File ./ignition-lab.ps1 }
 ```
 
 </details>
 
-The command downloads and runs our launcher. It verifies the package, starts an
+The command saves the launcher in your current directory and runs it. On macOS/Linux,
+run `bash ignition-lab.sh` to launch it again. It verifies the package, starts an
 isolated Ignition container, and opens the lab. Accept Ignition's license when
 prompted, then click **Run test** in the UI. Docker Compose is required; the first
 image download can take several minutes. No cloning or manual extraction.

@@ -1,7 +1,8 @@
 # Run the experiment from your terminal
 
 The recommended entry point is the copy-and-paste terminal command in the root
-README. It saves a versioned launcher to a unique temporary file and runs it;
+README. It saves a versioned launcher as `ignition-lab.sh` (macOS/Linux) or
+`ignition-lab.ps1` (Windows) in your current directory and runs it;
 standard input remains available for the license question (no curl-to-shell pipe).
 The macOS/Linux command uses the same portable shell launcher on both platforms.
 
