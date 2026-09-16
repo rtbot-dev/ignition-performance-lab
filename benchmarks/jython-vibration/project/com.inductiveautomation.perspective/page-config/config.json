@@ -1,0 +1,11 @@
+{
+  "pages": {
+    "/": {
+      "viewPath": "PerformanceLab",
+      "title": "Ignition Performance Lab"
+    }
+  },
+  "sharedDocks": {
+    "cornerPriority": "left-right"
+  }
+}

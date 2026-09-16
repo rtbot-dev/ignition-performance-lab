@@ -1,0 +1,48 @@
+name: katenaria-lab-jython-vibration
+services:
+  prepare:
+    build: .
+    image: katenaria/ignition-lab-jython-vibration:0.1.0
+    pull_policy: never
+    user: root
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["mkdir -p /data/projects/performance-lab; cp -R /benchmark/project/. /data/projects/performance-lab/; chown -R 2003:2003 /data /bench/results /bench/runtime"]
+    volumes:
+      - gateway-data:/data
+      - ./results:/bench/results
+      - ./runtime:/bench/runtime
+  gateway:
+    depends_on:
+      prepare:
+        condition: service_completed_successfully
+    image: inductiveautomation/ignition:8.3.4@sha256:26eaace47913c7bc81c712a88ef434dc82a040cbfccfb6c7d22134beec4e6b07
+    cpus: ${BENCH_CPUS:-3}
+    mem_limit: 4g
+    ports:
+      - "127.0.0.1:9088:8088"
+    environment:
+      ACCEPT_IGNITION_EULA: ${ACCEPT_IGNITION_EULA:?Accept the Ignition EULA before starting}
+      GATEWAY_ADMIN_USERNAME: benchmark
+      GATEWAY_ADMIN_PASSWORD: ${BENCH_PASSWORD:?Set a local benchmark password}
+      IGNITION_EDITION: standard
+      DISABLE_QUICKSTART: "true"
+      GATEWAY_MODULES_ENABLED: com.inductiveautomation.perspective
+    command:
+      - -n
+      - Katenaria-Performance-Lab
+      - -m
+      - "2048"
+      - --
+      - -Dignition.tags.scriptthreads=3
+      - -Dignition.tags.scriptqueuemaxsize=5
+    volumes:
+      - gateway-data:/usr/local/bin/ignition/data
+      - ./results:/bench/results
+      - ./runtime:/bench/runtime
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+volumes:
+  gateway-data:

@@ -1,0 +1,7 @@
+{
+  "title": "Katenaria Performance Lab",
+  "description": "Standalone Jython vibration benchmark",
+  "enabled": true,
+  "inheritable": false,
+  "parent": ""
+}

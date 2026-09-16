@@ -1,0 +1,28 @@
+[
+  {
+    "inputs": 2,
+    "records": 4,
+    "interval_ms": 2000,
+    "preflight": true
+  },
+  {
+    "inputs": 40,
+    "records": 60,
+    "interval_ms": 1000
+  },
+  {
+    "inputs": 80,
+    "records": 60,
+    "interval_ms": 1000
+  },
+  {
+    "inputs": 100,
+    "records": 60,
+    "interval_ms": 1000
+  },
+  {
+    "inputs": 120,
+    "records": 60,
+    "interval_ms": 1000
+  }
+]

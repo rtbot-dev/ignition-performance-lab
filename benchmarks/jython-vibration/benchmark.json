@@ -1,0 +1,22 @@
+{
+  "id": "jython-vibration",
+  "title": "Jython vibration analytics capacity",
+  "version": "0.1.0",
+  "status": "locally-validated",
+  "runtime": "Ignition 8.3.4",
+  "entry_url": "http://localhost:9088/data/perspective/client/performance-lab",
+  "default_cpu_quota": 3,
+  "script_workers": 3,
+  "jvm_heap_mib": 2048,
+  "container_memory_gib": 4,
+  "sample_count_per_burst": 20480,
+  "dataset": "NASA IMS bearings",
+  "tested_platforms": [
+    "Apple Silicon / Docker Desktop"
+  ],
+  "limitations": [
+    "Windows and AMD64 execution not yet verified",
+    "Single gateway runtime version",
+    "CPU quota is not physical-core pinning"
+  ]
+}

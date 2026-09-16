@@ -1,0 +1,42 @@
+{
+  "kernel_sha256": "f355509e183c27d9ae87ba20e8fecea9d1134c953bfe04003c7715bc878a683c",
+  "original_harness_sha256": "a5149ab9ccb2d16a7b3b62fd859a728a7e918ab5859b353f35d3cb716a6370a6",
+  "corpus_sha256": "648ff03452bd371063d755a2607381216f5db1aae310fbf47236312eaf7e5985",
+  "records": [
+    {
+      "source": "2003.10.22.12.06.24",
+      "column_zero_based": 0,
+      "samples": 20480
+    },
+    {
+      "source": "2003.10.22.12.54.13",
+      "column_zero_based": 2,
+      "samples": 20480
+    },
+    {
+      "source": "2003.11.19.11.56.07",
+      "column_zero_based": 6,
+      "samples": 20480
+    },
+    {
+      "source": "2003.11.22.15.36.56",
+      "column_zero_based": 4,
+      "samples": 20480
+    },
+    {
+      "source": "2003.11.23.06.26.56",
+      "column_zero_based": 4,
+      "samples": 20480
+    },
+    {
+      "source": "2003.11.24.01.11.24",
+      "column_zero_based": 6,
+      "samples": 20480
+    }
+  ],
+  "adaptations": [
+    "Jython-only execution; no Coprocessor module",
+    "Automated file-based stage plan and results export",
+    "Original numerical kernel and managed-provider transport retained"
+  ]
+}
