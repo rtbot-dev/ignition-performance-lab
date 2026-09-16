@@ -22,25 +22,33 @@ With Docker running, paste one command into your terminal.
 **macOS / Linux**
 
 ```sh
-curl -fL https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.3/Run-experiment-linux.sh -o ignition-lab.sh && bash ignition-lab.sh
+curl -fL https://github.com/rtbot-dev/ignition-performance-lab/releases/latest/download/Run-experiment-linux.sh -o ignition-lab.sh && bash ignition-lab.sh
 ```
 
 <details>
 <summary><strong>Windows PowerShell</strong></summary>
 
 ```powershell
-& { Invoke-WebRequest -UseBasicParsing https://github.com/rtbot-dev/ignition-performance-lab/releases/download/v0.1.3/Run-experiment-windows.ps1 -OutFile ignition-lab.ps1 -ErrorAction Stop; powershell -NoProfile -ExecutionPolicy Bypass -File ./ignition-lab.ps1 }
+& { Invoke-WebRequest -UseBasicParsing https://github.com/rtbot-dev/ignition-performance-lab/releases/latest/download/Run-experiment-windows.ps1 -OutFile ignition-lab.ps1 -ErrorAction Stop; powershell -NoProfile -ExecutionPolicy Bypass -File ./ignition-lab.ps1 }
 ```
 
 </details>
 
 The command saves the launcher in your current directory and runs it. On macOS/Linux,
-run `bash ignition-lab.sh` to launch it again. It verifies the package, starts an
+repeat the full command to get the latest release, or run `bash ignition-lab.sh`
+to reuse the downloaded version. It verifies the package, starts an
 isolated Ignition container, and opens the lab. Accept Ignition's license when
 prompted, then click **Run test** in the UI. Docker Compose is required; the first
 image download can take several minutes. No cloning or manual extraction.
 
 [Launcher source and details](docs/launchers.md) · [Run from source](benchmarks/jython-vibration/#run)
+
+## See exactly what runs
+
+[**View the Jython computation →**](benchmarks/jython-vibration/project/ignition/script-python/benchmark_full/code.py)
+
+Inside the lab, click **View computation** to read the shipped code locally.
+[How data reaches the calculation](benchmarks/jython-vibration/docs/code.md).
 
 ## Pick an experiment
 

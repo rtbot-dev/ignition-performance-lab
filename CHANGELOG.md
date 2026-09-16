@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4
+
+- Stable latest-release terminal commands; downloaded launchers still pin the package hash.
+- Local View computation page generated from the shipped Jython module, checked by CI.
+
 ## 0.1.3
 
 - Print Designer connection details and initial-setup credentials after startup.

@@ -33,7 +33,7 @@
           "name": "Title"
         },
         "props": {
-          "text": "Find the limit of your own gateway",
+          "text": "Learn how to measure analytics limits",
           "style": {
             "fontSize": "30px",
             "color": "#244152"
@@ -61,6 +61,34 @@
           "basis": "30px",
           "grow": 0,
           "shrink": 0
+        }
+      },
+      {
+        "type": "ia.input.button",
+        "meta": {
+          "name": "ViewCode"
+        },
+        "props": {
+          "text": "View computation",
+          "style": {
+            "backgroundColor": "#103641",
+            "color": "white"
+          }
+        },
+        "position": {
+          "basis": "42px",
+          "shrink": 0
+        },
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "type": "script",
+              "scope": "G",
+              "config": {
+                "script": "\tsystem.perspective.navigate(page=\"/code\")"
+              }
+            }
+          }
         }
       },
       {

@@ -60,3 +60,10 @@ Launcher and sign in. The password is stored in the local benchmark `.env`; do n
 share that file or unredacted terminal output. An existing gateway volume keeps its
 original credentials, even if a different release generates a new `.env`. Reuse
 the original credentials in that case; the launcher does not reset passwords.
+
+## Latest release versus repeatable runs
+
+The README uses GitHub's `/releases/latest/download/` URL. Running the full command
+again downloads the current release's launcher. Each downloaded launcher still
+pins its own release and package SHA-256, so it cannot accidentally combine files
+from different versions. Running an already downloaded launcher reuses that version.

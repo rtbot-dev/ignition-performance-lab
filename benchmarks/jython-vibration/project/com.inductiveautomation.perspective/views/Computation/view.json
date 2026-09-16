@@ -1,0 +1,64 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1200,
+      "height": 850
+    }
+  },
+  "root": {
+    "type": "ia.container.flex",
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "style": {
+        "padding": "24px",
+        "gap": "16px",
+        "overflow": "auto",
+        "backgroundColor": "#f3f7f8"
+      }
+    },
+    "children": [
+      {
+        "type": "ia.input.button",
+        "meta": {
+          "name": "Back"
+        },
+        "props": {
+          "text": "Back to experiment"
+        },
+        "position": {
+          "basis": "42px",
+          "shrink": 0
+        },
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "type": "script",
+              "scope": "G",
+              "config": {
+                "script": "\tsystem.perspective.navigate(page=\"/\")"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.markdown",
+        "meta": {
+          "name": "Code"
+        },
+        "props": {
+          "source": "# The computation running in this lab\n\nEach tag event passes one acceleration burst to `calculate(payload)`. This module computes the indicators and contains the independent reference and result ledger.\n\nThis read-only view is generated from the shipped source; editing it does not change the running script.\n\nSHA-256: `f355509e183c27d9ae87ba20e8fecea9d1134c953bfe04003c7715bc878a683c`\n\n```python\n\"\"\"Full original numerical workload, with 22 numeric output updates per burst.\"\"\"\nimport math\nimport threading\nLAYOUT = {'rms_trend': ['sample_count', 'rms_value'], 'kurtosis_trend': ['sample_count', 'kurtosis_value', 'm4', 'variance_value'], 'crest_clearance_impulse': ['sample_count', 'peak_to_peak', 'impulse_factor', 'shape_factor', 'clearance_factor', 'crest_factor', 'rms_value'], 'statistical_dashboard': ['sample_count', 'kurtosis_value', 'm4', 'skewness_value', 'm3', 'rms_value', 'std_value', 'variance_value', 'mean_value']}\nFIELDS = tuple(folder+'/'+field for folder in sorted(LAYOUT) for field in LAYOUT[folder])\n\ndef samples_from_payload(payload):\n    values = [float(p.strip()) for p in payload.split(',')]\n    if not values or not -2000000000 <= values[-1] <= -1000000000:\n        raise ValueError('Missing reserved delimiter')\n    samples = values[:-1]\n    if len(samples)<2 or any(math.isnan(x) or math.isinf(x) or x<=-100000000 for x in samples):\n        raise ValueError('Invalid acceleration burst')\n    return samples\n\ndef flatten(metrics):\n    return {folder+'/'+field:metrics[field] for folder in LAYOUT for field in LAYOUT[folder]}\n\ndef _mean(values):\n    return sum(values) / float(len(values))\n\n\ndef _safe_div(numerator, denominator):\n    if denominator == 0.0:\n        return 0.0\n    return numerator / denominator\n\n\ndef _compute_metrics(samples, device_id, channel_id):\n    n = len(samples)\n    if n == 0:\n        return None\n\n    mean_value = _mean(samples)\n    centered = [x - mean_value for x in samples]\n\n    m2 = _mean([x * x for x in centered])\n    m3 = _mean([x * x * x for x in centered])\n    m4 = _mean([x * x * x * x for x in centered])\n\n    variance_value = m2\n    std_value = math.sqrt(max(variance_value, 0.0))\n    rms_value = math.sqrt(_mean([x * x for x in samples]))\n    kurtosis_value = _safe_div(m4, variance_value * variance_value)\n    skewness_value = _safe_div(m3, std_value * std_value * std_value)\n\n    abs_values = [abs(x) for x in samples]\n    peak_value = max(abs_values)\n    min_value = min(samples)\n    max_value = max(samples)\n    peak_to_peak = max_value - min_value\n    mean_abs = _mean(abs_values)\n    mean_sqrt_abs = _mean([math.sqrt(a) for a in abs_values])\n\n    crest_factor = _safe_div(peak_value, rms_value)\n    clearance_factor = _safe_div(peak_value, mean_sqrt_abs * mean_sqrt_abs)\n    impulse_factor = _safe_div(peak_value, mean_abs)\n    shape_factor = _safe_div(rms_value, mean_abs)\n\n    return {\n        \"sample_count\":     n,\n        \"device_id\":        device_id,\n        \"channel_id\":       channel_id,\n        \"mean_value\":       mean_value,\n        \"variance_value\":   variance_value,\n        \"std_value\":        std_value,\n        \"rms_value\":        rms_value,\n        \"m3\":               m3,\n        \"m4\":               m4,\n        \"skewness_value\":   skewness_value,\n        \"kurtosis_value\":   kurtosis_value,\n        \"peak_to_peak\":     peak_to_peak,\n        \"crest_factor\":     crest_factor,\n        \"clearance_factor\": clearance_factor,\n        \"impulse_factor\":   impulse_factor,\n        \"shape_factor\":     shape_factor,\n    }\n\n\n\ndef calculate(payload):\n    return flatten(_compute_metrics(samples_from_payload(payload),0,0))\n\ndef reference(payload):\n    x=samples_from_payload(payload);n=len(x)\n    avg=lambda values: math.fsum(values)/n\n    mean=avg(x);delta=[v-mean for v in x]\n    v=avg(t*t for t in delta);m3=avg(t**3 for t in delta);m4=avg(t**4 for t in delta)\n    rms=math.sqrt(avg(t*t for t in x));std=math.sqrt(v)\n    peak=max(abs(t) for t in x);ma=avg(abs(t) for t in x);msa=avg(math.sqrt(abs(t)) for t in x)\n    div=lambda a,b:a/b if b else 0.\n    return flatten(dict(sample_count=n,mean_value=mean,variance_value=v,std_value=std,rms_value=rms,m3=m3,m4=m4,\n        kurtosis_value=div(m4,v*v),skewness_value=div(m3,std**3),peak_to_peak=max(x)-min(x),\n        crest_factor=div(peak,rms),clearance_factor=div(peak,msa*msa),impulse_factor=div(peak,ma),shape_factor=div(rms,ma)))\n\nclass Ledger(object):\n    def __init__(self):\n        self.lock = threading.RLock()\n        self.jobs = {}\n        self.published = self.completed = self.verified = self.outstanding = 0\n        self.latency_histogram = {}\n        self.latencies = []\n        self.duplicates = self.unknown = self.wrong = self.write_failures = 0\n        self.missed_flags = self.worker_entries = 0\n        self.max_sequence = {}\n        self.out_of_order = 0\n\n    def register(self, key, reference, start, sequence, channel):\n        with self.lock:\n            if key in self.jobs:\n                raise ValueError('Duplicate scheduled identity')\n            self.jobs[key] = dict(reference=reference, start=start, sequence=sequence,\n                                  channel=channel, done=False, accepted=None)\n\n    def accepted(self, key, ok):\n        with self.lock:\n            job = self.jobs[key]\n            old = job['accepted']\n            if old is True:\n                self.published -= 1\n                if not job['done']:self.outstanding -= 1\n            job['accepted'] = bool(ok)\n            if ok:\n                self.published += 1\n                if not job['done']:self.outstanding += 1\n            if not ok:\n                self.write_failures += 1\n\n    def enter(self, missed=False):\n        with self.lock:\n            self.worker_entries += 1\n            self.missed_flags += int(bool(missed))\n\n    def complete(self, key, values, end):\n        with self.lock:\n            job = self.jobs.get(key)\n            if job is None:\n                self.unknown += 1\n                return\n            if job['done']:\n                self.duplicates += 1\n                return\n            valid = True\n            for field in FIELDS:\n                actual, expected = values.get(field), job['reference'][field]\n                if actual is None or math.isnan(float(actual)) or math.isinf(float(actual)):\n                    valid = False\n                elif field.endswith('/sample_count'):\n                    valid = valid and actual == expected\n                else:\n                    valid = valid and abs(actual-expected) <= 1e-8+1e-6*abs(expected)\n            channel, sequence = job['channel'], job['sequence']\n            if sequence < self.max_sequence.get(channel, -1):\n                self.out_of_order += 1\n            self.max_sequence[channel] = max(sequence, self.max_sequence.get(channel, -1))\n            job.update(done=True, valid=valid, latency_ms=(end-job['start'])/1e6)\n            self.completed += 1\n            self.verified += int(valid)\n            if job['accepted'] is True:self.outstanding -= 1\n            latency = job['latency_ms']\n            self.latencies.append(latency)\n            bucket = int(math.ceil(latency))\n            self.latency_histogram[bucket] = self.latency_histogram.get(bucket, 0)+1\n            if not valid:\n                self.wrong += 1\n\n    def snapshot(self, exact=False):\n        with self.lock:\n            # Never scan/sort the growing job ledger in the timed path. Exact\n            # quantiles are computed only once, after all input and drain stop.\n            if exact:\n                latencies = sorted(self.latencies)\n                def percentile(p):\n                    return latencies[max(0,int(math.ceil(p*len(latencies)))-1)] if latencies else 0\n            else:\n                bins = sorted(self.latency_histogram.items())\n                def percentile(p):\n                    target = int(math.ceil(p*self.completed))\n                    count = 0\n                    for upper,n in bins:\n                        count += n\n                        if count >= target:return upper\n                    return 0\n            return dict(planned=len(self.jobs), published=self.published,\n                        completed=self.completed, verified=self.verified,\n                        outstanding=self.outstanding,\n                        wrong=self.wrong, duplicates=self.duplicates, unknown=self.unknown,\n                        write_failures=self.write_failures, missed_flags=self.missed_flags,\n                        worker_entries=self.worker_entries, out_of_order=self.out_of_order,\n                        p50_ms=percentile(.5), p99_ms=percentile(.99))\n\n    def missing(self):\n        with self.lock:\n            return sorted(k for k,j in self.jobs.items() if j['accepted'] is True and not j['done'])\n\n```"
+        },
+        "position": {
+          "basis": "auto",
+          "shrink": 0
+        }
+      }
+    ]
+  }
+}

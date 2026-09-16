@@ -3,6 +3,10 @@
     "/": {
       "viewPath": "PerformanceLab",
       "title": "Ignition Performance Lab"
+    },
+    "/code": {
+      "viewPath": "Computation",
+      "title": "View computation"
     }
   },
   "sharedDocks": {
