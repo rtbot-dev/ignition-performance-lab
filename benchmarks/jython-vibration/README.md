@@ -156,7 +156,7 @@ inspect the waiting queue and missed-event counter to distinguish the two.
 
 Rates use counter differences over the same interval, exclude the first 10 seconds
 and all samples after input stops, and require at least 10 seconds of measurement.
-Short safety-stopped runs may therefore have no point. Orange points indicate a
+Short probes are shown separately using their available rate samples; they are not passing capacity measurements. Orange points indicate a
 late publisher or correctness/observer problem and must not establish capacity.
 Hover over points for input count, cadence, duration and missed-event flags.
 The last 100 points persist in `results/throughput.json`; raw run files retain the
@@ -185,3 +185,9 @@ throughput over the combined interval must be more than 2% below offered load.
 An initial queue spike that settles or drains does not qualify. Raw run JSON
 records `early_overload`; input stops and accepted work drains before bisection
 continues. Passing probes still require the full 60 seconds.
+
+The Inputs under test card shows the active count (including the two-input numerical
+preflight). A gold provisional point updates from recent actual counters during
+each probe. Final points appear after drain; short probes use a separate marker.
+Starting a new scan archives the prior chart to `throughput-before-*.json` and
+clears its dots. Raw run files remain intact.

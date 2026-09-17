@@ -66,3 +66,9 @@ scan=dict(low=50,high=None,current=100,index=1)
 r2=dict(config=dict(channels=100),summary={},generator_valid=True,numerical_pass=False,early_overload=True)
 assert m.search_step(scan,r2,None)[0]==75
 print('Early overload checks passed: sustained growth, startup rejection, settled and draining queues, bisection after early stop.')
+rows=[dict(seconds=t,published=100*t,worker_entries=80*t,verified=80*t) for t in range(15)]
+p=m.live_point(rows,{'channels':100,'interval_ms':1000},'live-test')
+assert p['offered']==100 and p['live']==80 and p['measured'] is None
+assert m.live_point(rows[:2],{'channels':100},'short') is None
+assert m.live_point(rows,{'preflight':True},'preflight') is None
+print('Live point verified against actual counter rates; no provisional capacity result.')

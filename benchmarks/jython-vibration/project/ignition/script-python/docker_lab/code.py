@@ -36,12 +36,21 @@ def tick():
                 with open(ROOT+'/results/throughput.json') as f:g['lab.throughput']=json.load(f)
             except (IOError, ValueError):g['lab.throughput']=[]
             system.tag.configure(BASE.rstrip('/'),[original.spec('Throughput','Document',g['lab.throughput'])],'m')
+        if 'lab.currentInputTag' not in g:
+            system.tag.configure(BASE.rstrip('/'),[original.spec('CurrentInputs','Int4',0)],'m')
+            g['lab.currentInputTag']=True
         h=g[original.KEY];was=h.active;h.tick();now=System.currentTimeMillis()
         if was and not h.active:
             result=h.history[-1]
             point=throughput_summary.summarize(result)
-            if point:
-                g['lab.throughput']=(g['lab.throughput']+[point])[-100:]
+            plotted=point
+            if not plotted and not result['config'].get('preflight'):
+                plotted=throughput_summary.live_point([r for r in result['samples'] if r['seconds']<=result['input_duration_s']],result['config'],result['run_id'])
+                if plotted:
+                    plotted['short']=plotted.pop('live')
+                    plotted['status']='Short probe / '+result.get('outcome','')
+            if plotted:
+                g['lab.throughput']=(g['lab.throughput']+[plotted])[-100:]
                 save('results/throughput.json',g['lab.throughput'])
                 write({'Throughput':g['lab.throughput']})
             save('results/resources-'+result['run_id']+'.json',dict(run_id=result['run_id'],cpu_definition='100 percent = one CPU equivalent',heap_definition='used JVM heap / maximum JVM heap',samples=g.get('lab.trace',[])))
@@ -79,6 +88,10 @@ def tick():
                 if not (1<=inputs<=500 and 250<=cadence<=10000 and 10<=duration<=180):
                     write({'Status':'Choose 1-500 inputs, 0.25-10 s cadence and 10-180 s duration.'});return
                 if command=='scan':
+                    if g['lab.throughput']:save('results/throughput-before-'+str(now)+'.json',g['lab.throughput'])
+                    g['lab.throughput']=[]
+                    save('results/throughput.json',[])
+                    write({'Throughput':[]})
                     duration=60;cadence=1000
                     g['lab.scan']=dict(low=0,high=None,current=100,index=1,duration=duration,cadence=cadence)
                     inputs=100
@@ -118,6 +131,12 @@ def tick():
         if g.get('lab.scan'):
             scan=g['lab.scan'];status='Automatic search: %s inputs, test %s. Bracket: %s passing / %s overloaded. '%(scan['current'],scan['index'],scan['low'] or 'not yet measured',scan['high'] or 'not yet measured')+status
         if s['missed_flags']:status='Overload detected: missed events. '+('Draining submitted work...' if h.active else 'Input stopped; trace and raw results preserved.')
+        chart=list(g['lab.throughput'])
+        if h.active and not h.input_done:
+            live=throughput_summary.live_point(h.samples,h.config,h.run_id)
+            if live:chart.append(live)
+        current=h.config.get('channels',0) if h.active else (g['lab.pending'][0] if g.get('lab.pending') else 0)
+        write({'Throughput':chart,'CurrentInputs':current})
         write(dict(Busy=bool(h.active or g.get('lab.pending')),Status=status,History=g['lab.trace'],Published=s['published'],Started=s['worker_entries'],Verified=s['verified'],Waiting=-1 if s['missed_flags'] else waiting,Missed=s['missed_flags'],Wrong=s['wrong'],Heap=heap,CPU=cpu,Late=getattr(h,'max_lateness_ms',0)))
         save('results/status.json',dict(active=h.active,state=status,counts=s,last_result=h.history[-1]['run_id'] if h.history else None))
     except Exception as e:

@@ -87,3 +87,16 @@ def early_overload(samples):
     offered=last['published']-first['published']
     completed=last['verified']-first['verified']
     return offered>0 and completed<offered*.98
+
+
+def live_point(samples, config, run_id):
+    """Provisional rate over the latest observations; not a capacity result."""
+    if config.get('preflight') or len(samples)<3:return None
+    end=samples[-1]['seconds']
+    rows=[s for s in samples if s['seconds']>=max(0,end-10)]
+    if len(rows)<3:return None
+    first,last=rows[0],rows[-1];dt=last['seconds']-first['seconds']
+    if dt<2:return None
+    offered=(last['published']-first['published'])/dt
+    completed=(last['verified']-first['verified'])/dt
+    return dict(run_id=run_id,inputs=config['channels'],cadence_ms=config['interval_ms'],seconds=round(dt,1),offered=offered,completed=completed,live=completed,measured=None,invalid=None,missed=last.get('missed_flags',0),status='LIVE / provisional')
