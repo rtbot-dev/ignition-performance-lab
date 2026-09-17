@@ -36,7 +36,7 @@
           "direction": "row",
           "wrap": "wrap",
           "style": {
-            "gap": "18px",
+            "gap": "24px",
             "alignItems": "flex-start"
           }
         },
@@ -55,11 +55,11 @@
               "direction": "column",
               "style": {
                 "gap": "6px",
-                "minWidth": "280px"
+                "minWidth": "250px"
               }
             },
             "position": {
-              "basis": "400px",
+              "basis": "0px",
               "grow": 1,
               "shrink": 1
             },
@@ -74,29 +74,13 @@
                   "style": {
                     "fontSize": "30px",
                     "color": "#244152",
-                    "whiteSpace": "normal"
+                    "whiteSpace": "normal",
+                    "lineHeight": "1.2",
+                    "paddingTop": "2px"
                   }
                 },
                 "position": {
-                  "basis": "76px",
-                  "shrink": 0
-                }
-              },
-              {
-                "type": "ia.display.label",
-                "meta": {
-                  "name": "Subtitle"
-                },
-                "props": {
-                  "text": "Real bearing recordings. Ordinary Jython tag events. Your machine, your measurements.",
-                  "style": {
-                    "fontSize": "16px",
-                    "color": "#244152",
-                    "whiteSpace": "normal"
-                  }
-                },
-                "position": {
-                  "basis": "48px",
+                  "basis": "auto",
                   "shrink": 0
                 }
               }
@@ -112,11 +96,12 @@
               "style": {
                 "gap": "8px",
                 "padding": "0",
-                "alignItems": "flex-end"
-              }
+                "alignItems": "stretch"
+              },
+              "alignItems": "stretch"
             },
             "position": {
-              "basis": "285px",
+              "basis": "220px",
               "grow": 0,
               "shrink": 0
             },
@@ -137,7 +122,8 @@
                     "borderRadius": "22px",
                     "padding": "0 18px",
                     "cursor": "pointer",
-                    "width": "220px"
+                    "width": "100%",
+                    "boxSizing": "border-box"
                   },
                   "image": {
                     "source": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iMiIgZmlsbD0id2hpdGUiLz48cGF0aCBmaWxsPSIjMEE2NkMyIiBkPSJNNi41IDguNWEyIDIgMCAxIDAgMC00IDIgMiAwIDAgMCAwIDRaTTUgMTBoM3YxMEg1em01IDBoM3YxLjRjLjYtMSAxLjYtMS43IDMuMS0xLjcgMy4yIDAgMy45IDIgMy45IDQuNlYyMGgtM3YtNS4xYzAtMS4yIDAtMi43LTEuNy0yLjdzLTIgMS4zLTIgMi42VjIwaC0zeiIvPjwvc3ZnPg==",
@@ -178,13 +164,14 @@
                     "fontSize": "13px",
                     "color": "#476271",
                     "whiteSpace": "normal",
-                    "textAlign": "right",
-                    "width": "285px",
-                    "maxWidth": "100%"
+                    "textAlign": "center",
+                    "width": "100%",
+                    "maxWidth": "100%",
+                    "boxSizing": "border-box"
                   }
                 },
                 "position": {
-                  "basis": "48px",
+                  "basis": "60px",
                   "shrink": 0
                 }
               }
