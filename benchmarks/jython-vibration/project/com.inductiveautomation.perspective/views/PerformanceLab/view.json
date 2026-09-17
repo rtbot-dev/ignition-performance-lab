@@ -185,7 +185,7 @@
           "name": "ScanExplanation"
         },
         "props": {
-          "text": "Click once to find the boundary. We increase the load, then test midpoints until passing and overloaded counts differ by fewer than 5 inputs. Sustained overload can stop a test after about 20 seconds; passing tests run for 60 seconds. One burst per input per second.",
+          "text": "Click once to find the boundary. We increase the load, then test midpoints until passing and overloaded counts differ by fewer than 5 inputs. Sustained overload can stop a test after about 20 seconds; passing tests run for 30 seconds. One burst per input per second.",
           "style": {
             "fontSize": "16px",
             "color": "#476271",

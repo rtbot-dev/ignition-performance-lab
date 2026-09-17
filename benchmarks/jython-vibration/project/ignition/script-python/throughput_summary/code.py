@@ -100,3 +100,15 @@ def live_point(samples, config, run_id):
     offered=(last['published']-first['published'])/dt
     completed=(last['verified']-first['verified'])/dt
     return dict(run_id=run_id,inputs=config['channels'],cadence_ms=config['interval_ms'],seconds=round(dt,1),offered=offered,completed=completed,live=completed,measured=None,invalid=None,missed=last.get('missed_flags',0),status='LIVE / provisional')
+
+
+def loss_drain_quiet(samples, input_seconds):
+    """Observed callback quiescence after loss, not an exact queue measurement."""
+    if not samples:return False
+    end=samples[-1]['seconds']
+    rows=[r for r in samples if r['seconds']>=max(input_seconds,end-6)]
+    if len(rows)<5 or rows[-1]['seconds']-rows[0]['seconds']<5:return False
+    if not rows[-1].get('missed_flags'):return False
+    signature=lambda r:(r['published'],r['worker_entries'],r['completed'])
+    return (all(signature(r)==signature(rows[0]) for r in rows)
+            and rows[-1]['worker_entries']==rows[-1]['completed'])

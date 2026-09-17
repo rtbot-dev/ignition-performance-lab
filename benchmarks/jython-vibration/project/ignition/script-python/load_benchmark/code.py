@@ -287,7 +287,11 @@ class Harness(object):
         self.heap_high_ticks=self.heap_high_ticks+1 if retained>.8 or heap>.98 else 0
         if self.heap_high_ticks>=3:
             self.generator_error='Gateway heap safety limit';self.cancel.set()
-        if self.input_done and (snapshot['outstanding']==0 or now-self.input_end>30000000000):
+        quiet_after_loss=False
+        if self.input_done and self.mode=='Jython' and snapshot['missed_flags']:
+            import throughput_summary
+            quiet_after_loss=throughput_summary.loss_drain_quiet(self.samples,(self.input_end-self.started)/1e9)
+        if self.input_done and (snapshot['outstanding']==0 or quiet_after_loss or now-self.input_end>30000000000):
             self.finish(now,snapshot)
 
     def finish(self,now,snapshot):

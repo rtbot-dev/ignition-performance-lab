@@ -24,7 +24,7 @@ def tick():
             system.tag.configure('[default]',[dict(name='LoadBenchmark',tagType='Folder',tags=[original.spec('Armed','Boolean',True)])],'m')
             g[original.KEY]=original.Harness()
             g[original.KEY].state='Ready. Click Run automatic scan.'
-            defs=[('Inputs','Int4',40),('Cadence','Int4',1000),('Duration','Int4',60),('Command','String',''),('Busy','Boolean',False),('Status','String','Ready. Click Run automatic scan.'),('History','Document',[]),('Published','Int8',0),('Started','Int8',0),('Verified','Int8',0),('Waiting','Int8',0),('Missed','Int8',0),('Wrong','Int8',0),('Heap','Float8',0),('CPU','Float8',0),('Late','Float8',0),('Config','String',''),('LastResult','String','No run yet')]
+            defs=[('Inputs','Int4',40),('Cadence','Int4',1000),('Duration','Int4',30),('Command','String',''),('Busy','Boolean',False),('Status','String','Ready. Click Run automatic scan.'),('History','Document',[]),('Published','Int8',0),('Started','Int8',0),('Verified','Int8',0),('Waiting','Int8',0),('Missed','Int8',0),('Wrong','Int8',0),('Heap','Float8',0),('CPU','Float8',0),('Late','Float8',0),('Config','String',''),('LastResult','String','No run yet')]
             system.tag.configure('[default]',[dict(name='PerformanceLab',tagType='Folder',tags=[original.spec(*x) for x in defs])],'o')
             g['lab.trace']=[];g['lab.origin']=System.nanoTime()
             runtime=Runtime.getRuntime()
@@ -67,7 +67,7 @@ def tick():
                     h.state=conclusion
                     g.pop('lab.scan',None)
                 else:
-                    g['lab.pending']=(inputs,60,1000)
+                    g['lab.pending']=(inputs,30,1000)
                     write({'Inputs':inputs})
             if g.get('lab.error'):g.pop('lab.scan',None)
             if g.get('lab.pending'):
@@ -92,7 +92,7 @@ def tick():
                     g['lab.throughput']=[]
                     save('results/throughput.json',[])
                     write({'Throughput':[]})
-                    duration=60;cadence=1000
+                    duration=30;cadence=1000
                     g['lab.scan']=dict(low=0,high=None,current=100,index=1,duration=duration,cadence=cadence)
                     inputs=100
                 records=max(1,int(duration*1000./cadence))

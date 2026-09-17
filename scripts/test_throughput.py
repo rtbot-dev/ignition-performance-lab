@@ -72,3 +72,12 @@ assert p['offered']==100 and p['live']==80 and p['measured'] is None
 assert m.live_point(rows[:2],{'channels':100},'short') is None
 assert m.live_point(rows,{'preflight':True},'preflight') is None
 print('Live point verified against actual counter rates; no provisional capacity result.')
+
+rows=[dict(seconds=t,published=100,worker_entries=90,completed=90,missed_flags=1) for t in range(10,17)]
+assert m.loss_drain_quiet(rows,10)
+assert not m.loss_drain_quiet(rows,13)
+rows[-1]['completed']=89
+assert not m.loss_drain_quiet(rows,10)
+rows[-1]['completed']=90;rows[0]['worker_entries']=89
+assert not m.loss_drain_quiet(rows,10)
+print('Loss drain checks passed: quiet window, recent input, active callback, changing counters.')
