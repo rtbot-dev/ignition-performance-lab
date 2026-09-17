@@ -482,7 +482,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if({[default]PerformanceLab/Published} < 0, \"Unknown after loss\", numberFormat({[default]PerformanceLab/Published}, \"#,##0\"))"
+                        "expression": "if({[default]PerformanceLab/Published} < 0, \"—\", numberFormat({[default]PerformanceLab/Published}, \"#,##0\"))"
                       }
                     }
                   }
@@ -549,7 +549,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if({[default]PerformanceLab/Started} < 0, \"Unknown after loss\", numberFormat({[default]PerformanceLab/Started}, \"#,##0\"))"
+                        "expression": "if({[default]PerformanceLab/Started} < 0, \"—\", numberFormat({[default]PerformanceLab/Started}, \"#,##0\"))"
                       }
                     }
                   }
@@ -616,7 +616,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if({[default]PerformanceLab/Waiting} < 0, \"Unknown after loss\", numberFormat({[default]PerformanceLab/Waiting}, \"#,##0\"))"
+                        "expression": "if({[default]PerformanceLab/Waiting} < 0, \"—\", numberFormat({[default]PerformanceLab/Waiting}, \"#,##0\"))"
                       }
                     }
                   }
@@ -683,7 +683,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if({[default]PerformanceLab/Verified} < 0, \"Unknown after loss\", numberFormat({[default]PerformanceLab/Verified}, \"#,##0\"))"
+                        "expression": "if({[default]PerformanceLab/Verified} < 0, \"—\", numberFormat({[default]PerformanceLab/Verified}, \"#,##0\"))"
                       }
                     }
                   }
@@ -750,7 +750,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if({[default]PerformanceLab/Missed} < 0, \"Unknown after loss\", numberFormat({[default]PerformanceLab/Missed}, \"#,##0\"))"
+                        "expression": "if({[default]PerformanceLab/Missed} < 0, \"—\", numberFormat({[default]PerformanceLab/Missed}, \"#,##0\"))"
                       }
                     }
                   }

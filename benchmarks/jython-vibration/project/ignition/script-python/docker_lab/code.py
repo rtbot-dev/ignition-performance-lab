@@ -132,9 +132,15 @@ def tick():
             scan=g['lab.scan'];status='Automatic search: %s inputs, test %s. Bracket: %s passing / %s overloaded. '%(scan['current'],scan['index'],scan['low'] or 'not yet measured',scan['high'] or 'not yet measured')+status
         if s['missed_flags']:status='Overload detected: missed events. '+('Draining submitted work...' if h.active else 'Input stopped; trace and raw results preserved.')
         chart=list(g['lab.throughput'])
-        if h.active and not h.input_done:
-            live=throughput_summary.live_point(h.samples,h.config,h.run_id)
-            if live:chart.append(live)
+        if h.active:
+            rows=h.samples
+            if h.input_done:
+                input_seconds=(h.input_end-h.started)/1e9
+                rows=[row for row in rows if row['seconds']<=input_seconds]
+            live=throughput_summary.live_point(rows,h.config,h.run_id)
+            if live:
+                if h.input_done:live['status']='Input stopped / draining (provisional)'
+                chart.append(live)
         current=h.config.get('channels',0) if h.active else (g['lab.pending'][0] if g.get('lab.pending') else 0)
         write({'Throughput':chart,'CurrentInputs':current})
         write(dict(Busy=bool(h.active or g.get('lab.pending')),Status=status,History=g['lab.trace'],Published=s['published'],Started=s['worker_entries'],Verified=s['verified'],Waiting=-1 if s['missed_flags'] else waiting,Missed=s['missed_flags'],Wrong=s['wrong'],Heap=heap,CPU=cpu,Late=getattr(h,'max_lateness_ms',0)))
