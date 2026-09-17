@@ -14,7 +14,13 @@ for bench in sorted((ROOT/'benchmarks').iterdir()):
         kernel=bench/'project/ignition/script-python/benchmark_full/code.py'
         assert hashlib.sha256(kernel.read_bytes()).hexdigest()==provenance['kernel_sha256']
         view=json.loads((bench/'project/com.inductiveautomation.perspective/views/Computation/view.json').read_text())
-        assert '```python\n'+kernel.read_text()+'\n```' in next(c for c in view['root']['children'] if c.get('meta', {}).get('name') == 'Code')['props']['source'], 'Regenerate the source view'
+        from html.parser import HTMLParser
+        class SourceText(HTMLParser):
+            def __init__(self):super().__init__();self.parts=[]
+            def handle_data(self,data):self.parts.append(data)
+        parser=SourceText()
+        parser.feed(next(c for c in view['root']['children'] if c.get('meta', {}).get('name') == 'Code')['props']['source'])
+        assert ''.join(parser.parts)==kernel.read_text(), 'Regenerate the source view'
         assert hashlib.sha256((bench/'corpus.json').read_bytes()).hexdigest()==provenance['corpus_sha256']
     subprocess.run([sys.executable,'test_benchmark.py'],cwd=bench,check=True)
 subprocess.run([sys.executable, str(ROOT/'scripts/test_throughput.py')], check=True)
