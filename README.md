@@ -50,6 +50,8 @@ image download can take several minutes. No cloning or manual extraction.
 Inside the lab, click **View computation** to read the shipped code locally.
 [How data reaches the calculation](benchmarks/jython-vibration/docs/code.md).
 
+**Want to test your own computation?** [Open the project in Designer and edit it](benchmarks/jython-vibration/docs/designer.md). The browser code viewer is read-only.
+
 ## Pick an experiment
 
 | Experiment | What you will discover |

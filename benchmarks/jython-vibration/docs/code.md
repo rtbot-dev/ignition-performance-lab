@@ -14,3 +14,5 @@ without GitHub or Designer. The page is a generated read-only copy; CI checks it
 against the source. If the source changes, regenerate it with
 `python3 scripts/build_code_view.py`. For live modifications after installation,
 use Designer's project script library; the static viewer is not a live editor.
+
+[Connect Designer and change the computation](designer.md).

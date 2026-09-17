@@ -3,7 +3,7 @@
 A reproducible Jython vibration workload and a method for testing sustained capacity.
 Built by Katenaria, the company behind Coprocessor. **No Coprocessor module required.**
 
-[Measurement method](docs/methodology.md) · [Share a reproduction](docs/reproduction.md) · [Test protocol](PROTOCOL.md)
+[Connect Designer / edit computation](docs/designer.md) · [Measurement method](docs/methodology.md) · [Share a reproduction](docs/reproduction.md) · [Test protocol](PROTOCOL.md)
 
 ## Run
 
@@ -12,8 +12,9 @@ From the repository root, run `./lab.sh jython-vibration` (macOS/Linux) or
 On macOS you can also double-click **Start Lab.command** in the repository root.
 Docker Desktop must be installed and running.
 The launcher asks you to accept the Ignition license and generates a local password.
-Open http://localhost:9088/data/perspective/client/performance-lab once the gateway
-has started (about a minute after the initial download). Refresh if it is not ready.
+Open the URL printed by the launcher (normally
+http://localhost:9088/data/perspective/client/performance-lab) once the gateway
+has started. If you chose another port, use the printed URL. Refresh if it is not ready.
 
 The gateway starts **idle**. No Designer, PLC, database, or manual tag setup is needed.
 Choose input tags, cadence and duration, then **Run test**. The first run automatically
