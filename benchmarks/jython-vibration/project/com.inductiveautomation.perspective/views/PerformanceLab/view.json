@@ -64,240 +64,55 @@
         }
       },
       {
-        "type": "ia.input.button",
+        "type": "ia.display.label",
         "meta": {
-          "name": "ViewCode"
+          "name": "ScanExplanation"
         },
         "props": {
-          "text": "View computation",
+          "text": "Click once and watch the curve build. We increase from 20 to 500 input tags, sending one burst per tag each second and testing each level for 60 seconds. The scan stops when processing falls behind or a safety limit is reached. Allow up to 15 minutes.",
           "style": {
-            "backgroundColor": "#103641",
-            "color": "white"
+            "fontSize": "16px",
+            "color": "#476271",
+            "whiteSpace": "normal"
           }
         },
         "position": {
-          "basis": "42px",
+          "basis": "84px",
           "shrink": 0
-        },
-        "events": {
-          "component": {
-            "onActionPerformed": {
-              "type": "script",
-              "scope": "G",
-              "config": {
-                "script": "\tsystem.perspective.navigate(page=\"/code\")"
-              }
-            }
-          }
         }
       },
       {
         "type": "ia.container.flex",
         "meta": {
-          "name": "Controls"
+          "name": "ScanControls"
         },
         "props": {
           "direction": "row",
           "style": {
-            "gap": "12px",
-            "alignItems": "stretch"
+            "gap": "16px",
+            "alignItems": "center"
           }
         },
         "position": {
-          "basis": "44px",
-          "grow": 0,
+          "basis": "46px",
           "shrink": 0
         },
         "children": [
           {
-            "type": "ia.display.label",
-            "meta": {
-              "name": "InputsLabel"
-            },
-            "props": {
-              "text": "Input tags",
-              "style": {
-                "fontSize": "14px",
-                "color": "#244152"
-              }
-            },
-            "position": {
-              "basis": "140px",
-              "grow": 0,
-              "shrink": 0
-            }
-          },
-          {
-            "type": "ia.input.numeric-entry-field",
-            "meta": {
-              "name": "Inputs"
-            },
-            "props": {
-              "value": 40,
-              "inputBounds": {
-                "minimum": 1,
-                "maximum": 500
-              },
-              "format": "0"
-            },
-            "position": {
-              "basis": "100px",
-              "grow": 0,
-              "shrink": 0
-            },
-            "propConfig": {
-              "props.value": {
-                "binding": {
-                  "type": "tag",
-                  "config": {
-                    "tagPath": "[default]PerformanceLab/Inputs",
-                    "mode": "direct",
-                    "bidirectional": true
-                  }
-                }
-              },
-              "props.enabled": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "!{[default]PerformanceLab/Busy}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "meta": {
-              "name": "DurationLabel"
-            },
-            "props": {
-              "text": "Run duration (s)",
-              "style": {
-                "fontSize": "14px",
-                "color": "#244152"
-              }
-            },
-            "position": {
-              "basis": "140px",
-              "grow": 0,
-              "shrink": 0
-            }
-          },
-          {
-            "type": "ia.input.numeric-entry-field",
-            "meta": {
-              "name": "Duration"
-            },
-            "props": {
-              "value": 60,
-              "inputBounds": {
-                "minimum": 10,
-                "maximum": 180
-              },
-              "format": "0"
-            },
-            "position": {
-              "basis": "100px",
-              "grow": 0,
-              "shrink": 0
-            },
-            "propConfig": {
-              "props.value": {
-                "binding": {
-                  "type": "tag",
-                  "config": {
-                    "tagPath": "[default]PerformanceLab/Duration",
-                    "mode": "direct",
-                    "bidirectional": true
-                  }
-                }
-              },
-              "props.enabled": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "!{[default]PerformanceLab/Busy}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.dropdown",
-            "meta": {
-              "name": "Cadence"
-            },
-            "props": {
-              "value": 1000,
-              "options": [
-                {
-                  "value": 250,
-                  "label": "Every 0.25 s / input"
-                },
-                {
-                  "value": 500,
-                  "label": "Every 0.5 s / input"
-                },
-                {
-                  "value": 1000,
-                  "label": "Every 1.0 s / input"
-                },
-                {
-                  "value": 2000,
-                  "label": "Every 2.0 s / input"
-                },
-                {
-                  "value": 5000,
-                  "label": "Every 5.0 s / input"
-                },
-                {
-                  "value": 10000,
-                  "label": "Every 10.0 s / input"
-                }
-              ]
-            },
-            "position": {
-              "basis": "220px",
-              "grow": 0,
-              "shrink": 0
-            },
-            "propConfig": {
-              "props.value": {
-                "binding": {
-                  "type": "tag",
-                  "config": {
-                    "tagPath": "[default]PerformanceLab/Cadence",
-                    "mode": "direct",
-                    "bidirectional": true
-                  }
-                }
-              },
-              "props.enabled": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "!{[default]PerformanceLab/Busy}"
-                  }
-                }
-              }
-            }
-          },
-          {
             "type": "ia.input.button",
             "meta": {
-              "name": "Run"
+              "name": "AutomaticScan"
             },
             "props": {
-              "text": "Run test",
+              "text": "Run automatic scan",
               "style": {
-                "backgroundColor": "#087f8c",
+                "backgroundColor": "#103641",
                 "color": "white",
                 "borderRadius": "6px"
               }
             },
             "position": {
-              "basis": "155px",
+              "basis": "220px",
               "grow": 0,
               "shrink": 0
             },
@@ -307,7 +122,7 @@
                   "type": "script",
                   "scope": "G",
                   "config": {
-                    "script": "\tsystem.tag.writeBlocking(['[default]PerformanceLab/Command'], ['run'])"
+                    "script": "\tsystem.tag.writeBlocking(['[default]PerformanceLab/Command'], ['scan'])"
                   }
                 }
               }
@@ -326,10 +141,10 @@
           {
             "type": "ia.input.button",
             "meta": {
-              "name": "Stop"
+              "name": "StopScan"
             },
             "props": {
-              "text": "Stop input",
+              "text": "Stop scan",
               "style": {
                 "backgroundColor": "#ab4242",
                 "color": "white",
@@ -358,6 +173,15 @@
                   "type": "expr",
                   "config": {
                     "expression": "{[default]PerformanceLab/Busy}"
+                  }
+                }
+              },
+              "meta.visible": {
+                "binding": {
+                  "type": "tag",
+                  "config": {
+                    "tagPath": "[default]PerformanceLab/Busy",
+                    "mode": "direct"
                   }
                 }
               }
@@ -789,7 +613,7 @@
             }
           },
           "subtitle": {
-            "text": "Run increasing input counts at the same cadence. Each point is a measured run; hover for details.",
+            "text": "",
             "appearance": {
               "color": "",
               "font": {
@@ -947,7 +771,7 @@
                 "range": {
                   "min": 0,
                   "max": null,
-                  "useStrict": false
+                  "useStrict": true
                 },
                 "logarithmic": false,
                 "break": {
@@ -1036,7 +860,7 @@
                 "range": {
                   "min": 0,
                   "max": null,
-                  "useStrict": false
+                  "useStrict": true
                 },
                 "logarithmic": false,
                 "break": {
@@ -1595,7 +1419,7 @@
             {
               "name": "invalid",
               "label": {
-                "text": "Invalid run: inspect schedule / correctness"
+                "text": "Invalid run"
               },
               "visible": true,
               "hiddenInLegend": false,
@@ -1853,10 +1677,14 @@
               }
             }
           ],
-          "style": {}
+          "style": {
+            "width": "620px",
+            "maxWidth": "100%",
+            "alignSelf": "center"
+          }
         },
         "position": {
-          "basis": "370px",
+          "basis": "620px",
           "grow": 0,
           "shrink": 0
         },
@@ -1881,6 +1709,36 @@
                 {
                   "type": "script",
                   "code": "\tmaximum = max([100.0] + [float(r[\"offered\"]) * 1.1 for r in value])\n\treturn [{\"offered\": 0, \"ideal\": 0}, {\"offered\": maximum, \"ideal\": maximum}]"
+                }
+              ]
+            }
+          },
+          "props.xAxes[0].value.range.max": {
+            "binding": {
+              "type": "tag",
+              "config": {
+                "tagPath": "[default]PerformanceLab/Throughput",
+                "mode": "direct"
+              },
+              "transforms": [
+                {
+                  "type": "script",
+                  "code": "\treturn max([100.0] + [max(float(r[\"offered\"]), float(r[\"completed\"])) * 1.1 for r in value])"
+                }
+              ]
+            }
+          },
+          "props.yAxes[0].value.range.max": {
+            "binding": {
+              "type": "tag",
+              "config": {
+                "tagPath": "[default]PerformanceLab/Throughput",
+                "mode": "direct"
+              },
+              "transforms": [
+                {
+                  "type": "script",
+                  "code": "\treturn max([100.0] + [max(float(r[\"offered\"]), float(r[\"completed\"])) * 1.1 for r in value])"
                 }
               ]
             }
@@ -3830,14 +3688,15 @@
           "name": "Interpretation"
         },
         "props": {
-          "text": "Ignore startup transients. Increase inputs between runs; watch for sustained queue growth. A late publisher invalidates the schedule.",
+          "text": "The scan brackets the limit for this workload and these resources. Inspect sustained queue growth and missed events; a late publisher means the schedule itself could not keep up.",
           "style": {
             "fontSize": "13px",
-            "color": "#244152"
+            "color": "#244152",
+            "whiteSpace": "normal"
           }
         },
         "position": {
-          "basis": "26px",
+          "basis": "44px",
           "grow": 0,
           "shrink": 0
         }
@@ -3865,6 +3724,34 @@
               "type": "expr",
               "config": {
                 "expression": "\"Wrong results: \" + {[default]PerformanceLab/Wrong} + \" | Maximum publisher delay: \" + numberFormat({[default]PerformanceLab/Late}, \"0\") + \" ms (limit: max(50 ms, 10% of cadence))\""
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.input.button",
+        "meta": {
+          "name": "ViewCode"
+        },
+        "props": {
+          "text": "View computation",
+          "style": {
+            "backgroundColor": "#103641",
+            "color": "white"
+          }
+        },
+        "position": {
+          "basis": "42px",
+          "shrink": 0
+        },
+        "events": {
+          "component": {
+            "onActionPerformed": {
+              "type": "script",
+              "scope": "G",
+              "config": {
+                "script": "\tsystem.perspective.navigate(page=\"/code\")"
               }
             }
           }

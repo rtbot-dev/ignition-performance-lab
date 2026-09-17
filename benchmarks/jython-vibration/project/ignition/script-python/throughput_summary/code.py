@@ -19,3 +19,18 @@ def summarize(result):
                 missed=result['summary'].get('missed_flags', 0),
                 status=result.get('outcome', ''),
                 queue_growth=(last['published']-last['worker_entries']-first['published']+first['worker_entries'])/seconds if not result['summary'].get('missed_flags') else None)
+
+
+def scan_stop_reason(result, point):
+    """Conservative stop for a coarse scan, not a certified capacity threshold."""
+    if result['summary'].get('missed_flags'):
+        return 'missed events detected; inspect this run and the previous level.'
+    if not result.get('generator_valid'):
+        return 'publisher could not maintain cadence; this is not a processing limit.'
+    if not result.get('numerical_pass'):
+        return 'run incomplete or failed a correctness/safety check; inspect raw results.'
+    if not point:
+        return 'not enough sustained measurement time.'
+    if point['completed'] < point['offered'] * 0.98 and (point.get('queue_growth') or 0) > 0.5:
+        return 'processing fell behind with growing backlog; repeat nearby loads to refine the boundary.'
+    return None

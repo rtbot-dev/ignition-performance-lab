@@ -162,3 +162,13 @@ Hover over points for input count, cadence, duration and missed-event flags.
 The last 100 points persist in `results/throughput.json`; raw run files retain the
 underlying counters. Compare points only with the same computation and resources.
 The chart starts empty on a fresh install and fills as you run experiments.
+
+**Run automatic scan** tests 20, 40, 60, 80, 100, 125, 150, 200, 250,
+350 and 500 inputs at one burst per input per second. Each level lasts 60 seconds, followed by drain and preparation of the next
+level. **Stop scan** cancels the entire scan. The main view presents only this automatic workflow; advanced users can change the computation in Designer. The scan stops on missed events,
+correctness/safety failures, an invalid publisher schedule, or measured output
+more than 2% below input together with backlog growth above 0.5 jobs/s over the
+measurement interval. These are conservative scan stop rules, not universal
+capacity thresholds: repeat loads around the first failing level and inspect the
+queue trace. A complete scan can take over 12 minutes; resource limits may stop
+it earlier. Existing result files and throughput points remain available.

@@ -23,8 +23,8 @@ def tick():
         if original.KEY not in g:
             system.tag.configure('[default]',[dict(name='LoadBenchmark',tagType='Folder',tags=[original.spec('Armed','Boolean',True)])],'m')
             g[original.KEY]=original.Harness()
-            g[original.KEY].state='Ready. Choose a load, then run.'
-            defs=[('Inputs','Int4',40),('Cadence','Int4',1000),('Duration','Int4',60),('Command','String',''),('Busy','Boolean',False),('Status','String','Ready. Choose a load, then run.'),('History','Document',[]),('Published','Int8',0),('Started','Int8',0),('Verified','Int8',0),('Waiting','Int8',0),('Missed','Int8',0),('Wrong','Int8',0),('Heap','Float8',0),('CPU','Float8',0),('Late','Float8',0),('Config','String',''),('LastResult','String','No run yet')]
+            g[original.KEY].state='Ready. Click Run automatic scan.'
+            defs=[('Inputs','Int4',40),('Cadence','Int4',1000),('Duration','Int4',60),('Command','String',''),('Busy','Boolean',False),('Status','String','Ready. Click Run automatic scan.'),('History','Document',[]),('Published','Int8',0),('Started','Int8',0),('Verified','Int8',0),('Waiting','Int8',0),('Missed','Int8',0),('Wrong','Int8',0),('Heap','Float8',0),('CPU','Float8',0),('Late','Float8',0),('Config','String',''),('LastResult','String','No run yet')]
             system.tag.configure('[default]',[dict(name='PerformanceLab',tagType='Folder',tags=[original.spec(*x) for x in defs])],'o')
             g['lab.trace']=[];g['lab.origin']=System.nanoTime()
             runtime=Runtime.getRuntime()
@@ -50,6 +50,26 @@ def tick():
                 g['lab.error']='Unfinished work after drain. Restart the lab before another run.'
             if result['config']['preflight'] and not result['numerical_pass']:
                 g['lab.error']='Correctness check failed; inspect results before running.'
+            if g.get('lab.scan') and not result['config']['preflight']:
+                reason=throughput_summary.scan_stop_reason(result,point)
+                scan=g['lab.scan']
+                if reason:
+                    h.state='Scan stopped at %s inputs: %s'%(result['config']['channels'],reason)
+                    g.pop('lab.scan',None)
+                elif scan['index']+1>=len(scan['levels']):
+                    h.state='Scan complete through 500 inputs. No overload detected in these runs.'
+                    g.pop('lab.scan',None)
+                else:
+                    scan['index']+=1
+                    inputs=scan['levels'][scan['index']]
+                    records=max(1,int(scan['duration']*1000./scan['cadence']))
+                    if inputs*records>200000:
+                        h.state='Scan stopped at the 200,000-burst safety cap.'
+                        g.pop('lab.scan',None)
+                    else:
+                        g['lab.pending']=(inputs,records,scan['cadence'])
+                        write({'Inputs':inputs})
+            if g.get('lab.error'):g.pop('lab.scan',None)
             if g.get('lab.pending'):
                 g['lab.prepared']=False;g['lab.when']=now+5000
         vals=system.tag.readBlocking([BASE+n for n in ['Command','Inputs','Cadence','Duration']])
@@ -57,14 +77,20 @@ def tick():
         if command:
             write({'Command':''})
             if command=='stop':
-                g.pop('lab.pending',None);h.stop()
-            elif command=='run' and not h.active and not g.get('lab.pending') and not g.get('lab.error'):
+                g.pop('lab.scan',None);g.pop('lab.pending',None);h.stop()
+            elif command in ('run','scan') and not h.active and not g.get('lab.pending') and not g.get('lab.error'):
                 inputs=int(vals[1].value);cadence=int(vals[2].value);duration=int(vals[3].value)
                 if not (1<=inputs<=500 and 250<=cadence<=10000 and 10<=duration<=180):
                     write({'Status':'Choose 1-500 inputs, 0.25-10 s cadence and 10-180 s duration.'});return
+                if command=='scan':
+                    duration=60;cadence=1000
+                    g['lab.scan']=dict(levels=[20,40,60,80,100,125,150,200,250,350,500],index=0,duration=duration,cadence=cadence)
+                    inputs=20
                 records=max(1,int(duration*1000./cadence))
                 if inputs*records>200000:
+                    g.pop('lab.scan',None)
                     write({'Status':'Reduce input count or duration: maximum 200,000 bursts per run.'});return
+                write({'Inputs':inputs,'Duration':duration,'Cadence':cadence})
                 g['lab.pending']=(inputs,records,cadence)
                 g['lab.prepared']=False;g['lab.when']=now+3000
                 if 'Jython' not in h.preflight_pass:
@@ -80,7 +106,7 @@ def tick():
                 h.start('Jython',inputs,records,cadence,False,'staggered')
                 g['lab.trace']=[];g['lab.origin']=System.nanoTime()
         if os.path.exists(ROOT+'/runtime/STOP'):
-            g.pop('lab.pending',None);h.stop()
+            g.pop('lab.scan',None);g.pop('lab.pending',None);h.stop()
         s=h.ledger.snapshot();runtime=Runtime.getRuntime()
         heap=100.*(runtime.totalMemory()-runtime.freeMemory())/runtime.maxMemory()
         # JVM CPU time / wall time = CPU equivalents (100% = one fully busy CPU).
@@ -93,6 +119,8 @@ def tick():
             g['lab.trace'].append(dict(seconds=round((stamp-g['lab.origin'])/1e9,1),waiting=None if s['missed_flags'] else waiting,heap=heap,cpu=cpu))
             g['lab.trace']=g['lab.trace'][-240:]
         status=g.get('lab.error') or ('Checking numerical correctness before your first run...' if h.active and h.config.get('preflight') else ('Preparing input tags...' if g.get('lab.pending') and not h.active else h.state))
+        if g.get('lab.scan'):
+            scan=g['lab.scan'];status='Automatic scan: %s inputs (%s/%s). '%(scan['levels'][scan['index']],scan['index']+1,len(scan['levels']))+status
         if s['missed_flags']:status='Overload detected: missed events. '+('Draining submitted work...' if h.active else 'Input stopped; trace and raw results preserved.')
         write(dict(Busy=bool(h.active or g.get('lab.pending')),Status=status,History=g['lab.trace'],Published=s['published'],Started=s['worker_entries'],Verified=s['verified'],Waiting=-1 if s['missed_flags'] else waiting,Missed=s['missed_flags'],Wrong=s['wrong'],Heap=heap,CPU=cpu,Late=getattr(h,'max_lateness_ms',0)))
         save('results/status.json',dict(active=h.active,state=status,counts=s,last_result=h.history[-1]['run_id'] if h.history else None))
