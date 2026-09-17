@@ -28,40 +28,169 @@
     },
     "children": [
       {
-        "type": "ia.display.label",
+        "type": "ia.container.flex",
         "meta": {
-          "name": "Title"
+          "name": "Header"
         },
         "props": {
-          "text": "Learn how to measure analytics limits",
+          "direction": "row",
+          "wrap": "wrap",
           "style": {
-            "fontSize": "30px",
-            "color": "#244152"
+            "gap": "18px",
+            "alignItems": "flex-start"
           }
         },
         "position": {
-          "basis": "44px",
+          "basis": "auto",
           "grow": 0,
           "shrink": 0
-        }
-      },
-      {
-        "type": "ia.display.label",
-        "meta": {
-          "name": "Subtitle"
         },
-        "props": {
-          "text": "Real bearing recordings. Ordinary Jython tag events. Your machine, your measurements.",
-          "style": {
-            "fontSize": "16px",
-            "color": "#244152"
+        "children": [
+          {
+            "type": "ia.container.flex",
+            "meta": {
+              "name": "Introduction"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "gap": "6px",
+                "minWidth": "280px"
+              }
+            },
+            "position": {
+              "basis": "400px",
+              "grow": 1,
+              "shrink": 1
+            },
+            "children": [
+              {
+                "type": "ia.display.label",
+                "meta": {
+                  "name": "Title"
+                },
+                "props": {
+                  "text": "Learn how to measure analytics limits",
+                  "style": {
+                    "fontSize": "30px",
+                    "color": "#244152",
+                    "whiteSpace": "normal"
+                  }
+                },
+                "position": {
+                  "basis": "76px",
+                  "shrink": 0
+                }
+              },
+              {
+                "type": "ia.display.label",
+                "meta": {
+                  "name": "Subtitle"
+                },
+                "props": {
+                  "text": "Real bearing recordings. Ordinary Jython tag events. Your machine, your measurements.",
+                  "style": {
+                    "fontSize": "16px",
+                    "color": "#244152",
+                    "whiteSpace": "normal"
+                  }
+                },
+                "position": {
+                  "basis": "48px",
+                  "shrink": 0
+                }
+              }
+            ]
+          },
+          {
+            "type": "ia.container.flex",
+            "meta": {
+              "name": "FollowKatenaria"
+            },
+            "props": {
+              "direction": "column",
+              "style": {
+                "gap": "8px",
+                "padding": "0",
+                "alignItems": "flex-end"
+              }
+            },
+            "position": {
+              "basis": "285px",
+              "grow": 0,
+              "shrink": 0
+            },
+            "children": [
+              {
+                "type": "ia.input.button",
+                "meta": {
+                  "name": "LinkedInFollow"
+                },
+                "props": {
+                  "text": "Follow Katenaria",
+                  "style": {
+                    "backgroundColor": "#0A66C2",
+                    "color": "#FFFFFF",
+                    "fontWeight": "600",
+                    "fontSize": "15px",
+                    "border": "none",
+                    "borderRadius": "22px",
+                    "padding": "0 18px",
+                    "cursor": "pointer",
+                    "width": "220px"
+                  },
+                  "image": {
+                    "source": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iMiIgZmlsbD0id2hpdGUiLz48cGF0aCBmaWxsPSIjMEE2NkMyIiBkPSJNNi41IDguNWEyIDIgMCAxIDAgMC00IDIgMiAwIDAgMCAwIDRaTTUgMTBoM3YxMEg1em01IDBoM3YxLjRjLjYtMSAxLjYtMS43IDMuMS0xLjcgMy4yIDAgMy45IDIgMy45IDQuNlYyMGgtM3YtNS4xYzAtMS4yIDAtMi43LTEuNy0yLjdzLTIgMS4zLTIgMi42VjIwaC0zeiIvPjwvc3ZnPg==",
+                    "width": 22,
+                    "height": 22,
+                    "position": "left",
+                    "style": {
+                      "marginRight": "10px"
+                    }
+                  }
+                },
+                "position": {
+                  "basis": "42px",
+                  "grow": 0,
+                  "shrink": 0
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "nav",
+                      "scope": "C",
+                      "config": {
+                        "url": "https://www.linkedin.com/company/katenaria/",
+                        "newTab": true
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.display.label",
+                "meta": {
+                  "name": "ServicesCaption"
+                },
+                "props": {
+                  "text": "Machine learning and real-time analytics services for industrial applications.",
+                  "style": {
+                    "fontSize": "13px",
+                    "color": "#476271",
+                    "whiteSpace": "normal",
+                    "textAlign": "right",
+                    "width": "285px",
+                    "maxWidth": "100%"
+                  }
+                },
+                "position": {
+                  "basis": "48px",
+                  "shrink": 0
+                }
+              }
+            ]
           }
-        },
-        "position": {
-          "basis": "30px",
-          "grow": 0,
-          "shrink": 0
-        }
+        ]
       },
       {
         "type": "ia.display.label",
@@ -3756,83 +3885,6 @@
             }
           }
         }
-      },
-      {
-        "type": "ia.container.flex",
-        "meta": {
-          "name": "FollowKatenaria"
-        },
-        "props": {
-          "direction": "column",
-          "style": {
-            "gap": "8px",
-            "padding": "18px 0",
-            "alignItems": "flex-start"
-          }
-        },
-        "position": {
-          "basis": "100px",
-          "grow": 0,
-          "shrink": 0
-        },
-        "children": [
-          {
-            "type": "ia.input.button",
-            "meta": {
-              "name": "LinkedInFollow"
-            },
-            "props": {
-              "text": "Follow Katenaria",
-              "style": {
-                "backgroundColor": "#0A66C2",
-                "color": "#FFFFFF",
-                "fontWeight": "600",
-                "fontSize": "15px",
-                "border": "none",
-                "borderRadius": "22px",
-                "padding": "0 24px",
-                "cursor": "pointer",
-                "width": "190px"
-              }
-            },
-            "position": {
-              "basis": "42px",
-              "grow": 0,
-              "shrink": 0
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "nav",
-                  "scope": "C",
-                  "config": {
-                    "url": "https://www.linkedin.com/company/katenaria/",
-                    "newTab": true
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "meta": {
-              "name": "ServicesCaption"
-            },
-            "props": {
-              "text": "Machine learning and real-time analytics services for industrial applications.",
-              "style": {
-                "fontSize": "14px",
-                "color": "#476271",
-                "whiteSpace": "normal"
-              }
-            },
-            "position": {
-              "basis": "24px",
-              "grow": 0,
-              "shrink": 0
-            }
-          }
-        ]
       }
     ]
   }
