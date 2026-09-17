@@ -141,6 +141,9 @@ def tick():
             if live:
                 if h.input_done:live['status']='Input stopped / draining (provisional)'
                 chart.append(live)
+        for point in chart:
+            for field in ('measured','invalid','live','short'):
+                if field not in point:point[field]=None
         current=h.config.get('channels',0) if h.active else (g['lab.pending'][0] if g.get('lab.pending') else 0)
         write({'Throughput':chart,'CurrentInputs':current})
         write(dict(Busy=bool(h.active or g.get('lab.pending')),Status=status,History=g['lab.trace'],Published=s['published'],Started=s['worker_entries'],Verified=s['verified'],Waiting=-1 if s['missed_flags'] else waiting,Missed=s['missed_flags'],Wrong=s['wrong'],Heap=heap,CPU=cpu,Late=getattr(h,'max_lateness_ms',0)))
