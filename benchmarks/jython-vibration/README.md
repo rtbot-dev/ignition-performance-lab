@@ -163,12 +163,25 @@ The last 100 points persist in `results/throughput.json`; raw run files retain t
 underlying counters. Compare points only with the same computation and resources.
 The chart starts empty on a fresh install and fills as you run experiments.
 
-**Run automatic scan** tests 20, 40, 60, 80, 100, 125, 150, 200, 250,
-350 and 500 inputs at one burst per input per second. Each level lasts 60 seconds, followed by drain and preparation of the next
-level. **Stop scan** cancels the entire scan. The main view presents only this automatic workflow; advanced users can change the computation in Designer. The scan stops on missed events,
-correctness/safety failures, an invalid publisher schedule, or measured output
-more than 2% below input together with backlog growth above 0.5 jobs/s over the
-measurement interval. These are conservative scan stop rules, not universal
-capacity thresholds: repeat loads around the first failing level and inspect the
-queue trace. A complete scan can take over 12 minutes; resource limits may stop
-it earlier. Existing result files and throughput points remain available.
+**Run automatic scan** starts at 100 inputs with one burst per input per second.
+Passing probes run for 60 seconds. It doubles the count until overload is found
+(up to 500), then bisects the passing/failing interval until the difference is
+less than five inputs. If the initial probe fails, it searches below 100.
+**Stop scan** cancels the search. A missed event establishes overload immediately;
+otherwise the sustained throughput/backlog criteria above apply. Invalid publisher
+schedules, numerical failures and heap safety stops abort without claiming a
+capacity bound. Runs drain before the next probe begins.
+
+The final status shows the measured bracket, not an exact universal limit.
+`results/search.json` records the bracket and last run; all raw run files and
+throughput points are retained. A boundary near 85 inputs takes six 60-second
+probes with this search rather than scanning all preset levels. Timing also
+includes preparation and drain; immediate missed-event failures can finish sooner.
+
+Overloaded probes can finish early: after at least 20 seconds, the scanner checks
+three successive approximately five-second windows (excluding startup). Every
+window must have a fitted waiting-queue slope above 0.5 jobs/s, and completed
+throughput over the combined interval must be more than 2% below offered load.
+An initial queue spike that settles or drains does not qualify. Raw run JSON
+records `early_overload`; input stops and accepted work drains before bisection
+continues. Passing probes still require the full 60 seconds.

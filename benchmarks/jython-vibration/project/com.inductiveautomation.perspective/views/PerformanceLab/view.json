@@ -69,7 +69,7 @@
           "name": "ScanExplanation"
         },
         "props": {
-          "text": "Click once and watch the curve build. We increase from 20 to 500 input tags, sending one burst per tag each second and testing each level for 60 seconds. The scan stops when processing falls behind or a safety limit is reached. Allow up to 15 minutes.",
+          "text": "Click once to find the boundary. We increase the load, then test midpoints until passing and overloaded counts differ by fewer than 5 inputs. Sustained overload can stop a test after about 20 seconds; passing tests run for 60 seconds. One burst per input per second.",
           "style": {
             "fontSize": "16px",
             "color": "#476271",

@@ -51,27 +51,23 @@ def tick():
             if result['config']['preflight'] and not result['numerical_pass']:
                 g['lab.error']='Correctness check failed; inspect results before running.'
             if g.get('lab.scan') and not result['config']['preflight']:
-                reason=throughput_summary.scan_stop_reason(result,point)
                 scan=g['lab.scan']
-                if reason:
-                    h.state='Scan stopped at %s inputs: %s'%(result['config']['channels'],reason)
-                    g.pop('lab.scan',None)
-                elif scan['index']+1>=len(scan['levels']):
-                    h.state='Scan complete through 500 inputs. No overload detected in these runs.'
+                inputs,conclusion=throughput_summary.search_step(scan,result,point)
+                save('results/search.json',dict(scan=scan,conclusion=conclusion,last_run=result['run_id']))
+                if conclusion:
+                    h.state=conclusion
                     g.pop('lab.scan',None)
                 else:
-                    scan['index']+=1
-                    inputs=scan['levels'][scan['index']]
-                    records=max(1,int(scan['duration']*1000./scan['cadence']))
-                    if inputs*records>200000:
-                        h.state='Scan stopped at the 200,000-burst safety cap.'
-                        g.pop('lab.scan',None)
-                    else:
-                        g['lab.pending']=(inputs,records,scan['cadence'])
-                        write({'Inputs':inputs})
+                    g['lab.pending']=(inputs,60,1000)
+                    write({'Inputs':inputs})
             if g.get('lab.error'):g.pop('lab.scan',None)
             if g.get('lab.pending'):
                 g['lab.prepared']=False;g['lab.when']=now+5000
+        if g.get('lab.scan') and h.active and not h.config.get('preflight') and not h.input_done and not getattr(h,'early_overload',False):
+            if throughput_summary.early_overload(h.samples):
+                h.early_overload=True
+                h.stop()
+                h.state='Overload confirmed across three windows; draining before the next midpoint.'
         vals=system.tag.readBlocking([BASE+n for n in ['Command','Inputs','Cadence','Duration']])
         command=str(vals[0].value)
         if command:
@@ -84,8 +80,8 @@ def tick():
                     write({'Status':'Choose 1-500 inputs, 0.25-10 s cadence and 10-180 s duration.'});return
                 if command=='scan':
                     duration=60;cadence=1000
-                    g['lab.scan']=dict(levels=[20,40,60,80,100,125,150,200,250,350,500],index=0,duration=duration,cadence=cadence)
-                    inputs=20
+                    g['lab.scan']=dict(low=0,high=None,current=100,index=1,duration=duration,cadence=cadence)
+                    inputs=100
                 records=max(1,int(duration*1000./cadence))
                 if inputs*records>200000:
                     g.pop('lab.scan',None)
@@ -120,7 +116,7 @@ def tick():
             g['lab.trace']=g['lab.trace'][-240:]
         status=g.get('lab.error') or ('Checking numerical correctness before your first run...' if h.active and h.config.get('preflight') else ('Preparing input tags...' if g.get('lab.pending') and not h.active else h.state))
         if g.get('lab.scan'):
-            scan=g['lab.scan'];status='Automatic scan: %s inputs (%s/%s). '%(scan['levels'][scan['index']],scan['index']+1,len(scan['levels']))+status
+            scan=g['lab.scan'];status='Automatic search: %s inputs, test %s. Bracket: %s passing / %s overloaded. '%(scan['current'],scan['index'],scan['low'] or 'not yet measured',scan['high'] or 'not yet measured')+status
         if s['missed_flags']:status='Overload detected: missed events. '+('Draining submitted work...' if h.active else 'Input stopped; trace and raw results preserved.')
         write(dict(Busy=bool(h.active or g.get('lab.pending')),Status=status,History=g['lab.trace'],Published=s['published'],Started=s['worker_entries'],Verified=s['verified'],Waiting=-1 if s['missed_flags'] else waiting,Missed=s['missed_flags'],Wrong=s['wrong'],Heap=heap,CPU=cpu,Late=getattr(h,'max_lateness_ms',0)))
         save('results/status.json',dict(active=h.active,state=status,counts=s,last_result=h.history[-1]['run_id'] if h.history else None))

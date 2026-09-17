@@ -207,7 +207,7 @@ class Harness(object):
         self.base_ms=max((System.currentTimeMillis()//10000+2)*10000,event_clock.get(KEY+'.eventclock',0))
         event_clock[KEY+'.eventclock']=self.base_ms+records*2000+2000
         self.started=System.nanoTime()
-        self.samples=[];self.last_sample=0;self.max_lateness_ms=0
+        self.samples=[];self.last_sample=0;self.max_lateness_ms=0;self.early_overload=False
         self.heap_high_ticks=0
         self.input_done=False;self.raw_callbacks=0;self.rejected_callbacks=0;self.active=True;self.phase='publishing'
         self.state='Correctness check / '+mode if preflight else 'Measuring / '+mode
@@ -300,6 +300,7 @@ class Harness(object):
         generator_valid=self.max_lateness_ms<=max(50,self.config['interval_ms']*.1)
         if complete and self.config['preflight']:self.preflight_pass.add(self.mode)
         result=dict(run_id=self.run_id,config=self.config,summary=snapshot,
+                    early_overload=getattr(self,'early_overload',False),
                     harness_version=self.version,raw_callbacks=getattr(self,'raw_callbacks',0),rejected_callbacks=getattr(self,'rejected_callbacks',0),
                     input_duration_s=(self.input_end-self.started)/1e9,
                     numerical_pass=complete,generator_valid=generator_valid,

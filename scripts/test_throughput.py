@@ -34,3 +34,35 @@ for row in r['samples']:row['verified']=row['published'];row['worker_entries']=r
 assert m.scan_stop_reason(r,m.summarize(r)) is None
 assert 'enough' in m.scan_stop_reason(r,None)
 print('Automatic scan stop criteria passed.')
+# End-to-end search trajectories, including a failure below the initial probe.
+for limit in [0,1,4,85,130,300,500]:
+    scan=dict(low=0,high=None,current=100,index=1)
+    seen=[]
+    for _ in range(20):
+        n=scan['current'];seen.append(n)
+        result=dict(config=dict(channels=n),summary={},generator_valid=True,numerical_pass=True)
+        point=dict(offered=n,completed=n if n<=limit else n*.8,queue_growth=0 if n<=limit else n*.2+1)
+        target,conclusion=m.search_step(scan,result,point)
+        if conclusion:break
+    else:raise AssertionError('Search did not converge')
+    assert len(seen)==len(set(seen)),seen
+    if limit==500:assert scan['low']==500 and scan['high'] is None
+    else:assert scan['low']<=limit<scan['high'] and scan['high']-scan['low']<5
+scan=dict(low=50,high=100,current=75,index=3)
+result=dict(config=dict(channels=75),summary={},generator_valid=False,numerical_pass=True)
+assert m.search_step(scan,result,None)[0] is None
+assert scan['low']==50 and scan['high']==100
+result.update(generator_valid=True,numerical_pass=False,error='Jython missedEvents / input overflow',summary={'missed_flags':1})
+assert m.search_step(scan,result,None)[0]==62
+print('Adaptive search verified across boundaries 0–500; invalid runs preserve bracket; early missed events establish overload.')
+rows=[dict(seconds=t,published=100*t,worker_entries=80*t,verified=80*t) for t in range(22)]
+assert m.early_overload(rows)
+assert not m.early_overload(rows[:15])
+for row in rows:row['worker_entries']=row['published']-10;row['verified']=row['published']-12
+assert not m.early_overload(rows) # initial backlog that settles
+for row in rows:row['worker_entries']=row['published']-max(0,40-row['seconds']);row['verified']=row['worker_entries']
+assert not m.early_overload(rows) # backlog drains
+scan=dict(low=50,high=None,current=100,index=1)
+r2=dict(config=dict(channels=100),summary={},generator_valid=True,numerical_pass=False,early_overload=True)
+assert m.search_step(scan,r2,None)[0]==75
+print('Early overload checks passed: sustained growth, startup rejection, settled and draining queues, bisection after early stop.')
