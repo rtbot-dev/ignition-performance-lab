@@ -145,3 +145,20 @@ capacity; the default ramp includes low-load warmup before higher loads.
 
 The historical `plans/publication.json` lists the stages used for the published
 sequence. In this interactive version, enter those loads in the UI in that order.
+
+### See where throughput stops keeping pace
+
+Run several increasing input counts at the same cadence, using 60-second runs.
+The throughput chart retains one point per completed run, plotting actual published
+bursts per second against verified computations per second. The dashed diagonal
+means processing keeps pace. A point below it means work accumulated or was lost;
+inspect the waiting queue and missed-event counter to distinguish the two.
+
+Rates use counter differences over the same interval, exclude the first 10 seconds
+and all samples after input stops, and require at least 10 seconds of measurement.
+Short safety-stopped runs may therefore have no point. Orange points indicate a
+late publisher or correctness/observer problem and must not establish capacity.
+Hover over points for input count, cadence, duration and missed-event flags.
+The last 100 points persist in `results/throughput.json`; raw run files retain the
+underlying counters. Compare points only with the same computation and resources.
+The chart starts empty on a fresh install and fills as you run experiments.

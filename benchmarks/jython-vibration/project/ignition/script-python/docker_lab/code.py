@@ -2,6 +2,7 @@
 import json, os
 import system
 import load_benchmark as original
+import throughput_summary
 from java.lang import System, Runtime
 from java.lang.management import ManagementFactory
 ROOT='/bench'
@@ -30,9 +31,19 @@ def tick():
             env=dict(java=str(System.getProperty('java.version')),os=str(System.getProperty('os.name')),architecture=str(System.getProperty('os.arch')),visible_cpus=runtime.availableProcessors(),max_heap_bytes=runtime.maxMemory(),jvm_arguments=[str(x) for x in ManagementFactory.getRuntimeMXBean().getInputArguments() if not str(x).startswith('-Dwrapper.')],workers=int(System.getProperty('ignition.tags.scriptthreads','3')),queue_per_tag=int(System.getProperty('ignition.tags.scriptqueuemaxsize','5')))
             save('results/environment.json',env)
             write({'Config':'%s visible CPUs | %s Jython workers | %.1f GiB maximum JVM heap | 5 queued events per tag'%(env['visible_cpus'],env['workers'],env['max_heap_bytes']/1073741824.)})
+        if 'lab.throughput' not in g:
+            try:
+                with open(ROOT+'/results/throughput.json') as f:g['lab.throughput']=json.load(f)
+            except (IOError, ValueError):g['lab.throughput']=[]
+            system.tag.configure(BASE.rstrip('/'),[original.spec('Throughput','Document',g['lab.throughput'])],'m')
         h=g[original.KEY];was=h.active;h.tick();now=System.currentTimeMillis()
         if was and not h.active:
             result=h.history[-1]
+            point=throughput_summary.summarize(result)
+            if point:
+                g['lab.throughput']=(g['lab.throughput']+[point])[-100:]
+                save('results/throughput.json',g['lab.throughput'])
+                write({'Throughput':g['lab.throughput']})
             save('results/resources-'+result['run_id']+'.json',dict(run_id=result['run_id'],cpu_definition='100 percent = one CPU equivalent',heap_definition='used JVM heap / maximum JVM heap',samples=g.get('lab.trace',[])))
             write({'LastResult':result['run_id']+'.json'})
             if result['summary']['outstanding'] and not result['summary']['missed_flags']:

@@ -17,4 +17,5 @@ for bench in sorted((ROOT/'benchmarks').iterdir()):
         assert '```python\n'+kernel.read_text()+'\n```' in view['root']['children'][1]['props']['source'], 'Regenerate the source view'
         assert hashlib.sha256((bench/'corpus.json').read_bytes()).hexdigest()==provenance['corpus_sha256']
     subprocess.run([sys.executable,'test_benchmark.py'],cwd=bench,check=True)
+subprocess.run([sys.executable, str(ROOT/'scripts/test_throughput.py')], check=True)
 print('Benchmark metadata, project JSON, provenance and numerical tests passed.')
